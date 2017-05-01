@@ -144,6 +144,7 @@ public class SproutsGameSolver implements Runnable {
 				}
 			}
 		}
+		System.out.print("\n");
 		return moves;
 	}
 

@@ -38,7 +38,8 @@ public class SproutsBoardPanel extends JPanel {
 			int x, y;
 			if (v.isOriginal()) {
 				y = SproutsUI.OFFSET;
-				x = v.getUniqueID() * SproutsUI.OFFSET;
+				x = (((this.getWidth() - SproutsUI.OFFSET) / State.SPROUTS) * (((v.getUniqueID() - 1) % State.SPROUTS))) + SproutsUI.OFFSET;
+				// x = v.getUniqueID() * SproutsUI.OFFSET;
 			} else {
 				x = (((this.getWidth() - SproutsUI.OFFSET) / 10) * (((v.getUniqueID() - 1 - State.SPROUTS) % 10))) + SproutsUI.OFFSET;
 				y = (((this.getHeight() - SproutsUI.OFFSET) / (int) Math.ceil((Vertex.getNumberOfVertices() / 10.0) + 1)) * (int) Math.ceil(((v.getUniqueID() - State.SPROUTS) / 10.0))
@@ -73,7 +74,12 @@ public class SproutsBoardPanel extends JPanel {
 						break;
 				}
 			}
-			g2.draw(new Line2D.Double(v1.getX(), v1.getY(), v2.getX(), v2.getY()));
+			// TODO: v2.x returns null??
+			if (v1 == null || v2 == null) {
+				System.out.println(v1 + " OR " + v2 + " is empty?");
+				System.out.println("E|v1:" + edge.getNodes().getFirst().getUniqueID() + " E|v2:" + edge.getNodes().getSecond().getUniqueID());
+			} else
+				g2.draw(new Line2D.Double(v1.getX(), v1.getY(), v2.getX(), v2.getY()));
 		}
 
 	}
