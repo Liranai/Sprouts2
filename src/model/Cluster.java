@@ -25,6 +25,7 @@ public class Cluster {
 
 	private int clusterType = -1;
 	private long uniquenessFactor = -1;
+	private String uniquenessString = "";
 	private int uniqueID;
 
 	public Cluster() {
@@ -56,15 +57,21 @@ public class Cluster {
 		setClusterType();
 		switch (clusterType) {
 		case 4:
-			if (structure.containsKey(3))
+			if (structure.containsKey(3)) {
 				uniquenessFactor += structure.get(3) + 3 * Vertex.getNumberOfVertices();
+				// uniquenessString += structure.get(3) + "c";
+			}
 		case 3:
 		case 2:
-			if (structure.containsKey(2))
+			if (structure.containsKey(2)) {
 				uniquenessFactor += structure.get(2) + 2 * Vertex.getNumberOfVertices();
+				uniquenessString += structure.get(2) + "b";
+			}
 		case 1:
-			if (structure.containsKey(1))
+			if (structure.containsKey(1)) {
 				uniquenessFactor += structure.get(1) + Vertex.getNumberOfVertices();
+				uniquenessString += structure.get(1) + "a";
+			}
 			break;
 		}
 	}

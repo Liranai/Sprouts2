@@ -53,13 +53,13 @@ public class SproutsBoardPanel extends JPanel {
 		g2.setColor(Color.gray);
 		g2.fill(getVisibleRect());
 
-		g2.setColor(Color.BLACK);
 		for (UIVertex vertex : vertices) {
 			g2.setColor(Color.BLACK);
 			if (vertex.getVertex().isOriginal())
 				g2.setColor(Color.RED);
 			g2.fill(new Ellipse2D.Double(vertex.getX(), vertex.getY(), SproutsUI.CIRCLESIZE / 2, SproutsUI.CIRCLESIZE / 2));
 		}
+		g2.setColor(Color.BLACK);
 		for (Edge edge : state.getEdges()) {
 			UIVertex v1 = null, v2 = null;
 			for (UIVertex vertex : vertices) {

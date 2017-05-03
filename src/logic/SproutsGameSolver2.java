@@ -40,9 +40,9 @@ public class SproutsGameSolver2 {
 			for (Plane plane : root.getState().getPlanes().values()) {
 				plane.setClusters(Cluster.clusterPlane(plane));
 			}
-			moves = SproutsGameSolver.getInterClusterMoves(root.getState());
+			moves = SproutsGameSolver.getLegalMoves(root.getState());
 			if (moves.size() > 0)
-				moves.get(0).makeMove(root.getState());
+				moves.get(rand.nextInt(moves.size())).makeMove(root.getState());
 		} while (moves.size() > 0);
 	}
 }

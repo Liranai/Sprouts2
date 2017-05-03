@@ -75,6 +75,10 @@ public class SproutsGameSolver implements Runnable {
 			// }
 
 			System.out.println("CLUSTERS: " + clusters.size());
+			for (Cluster cluster : clusters) {
+				cluster.analyseCluster();
+				System.out.println(cluster.getClusterType() + " UF:" + cluster.getUniquenessFactor() + "\tUS:" + cluster.getUniquenessString());
+			}
 
 			// System.out.println(plane);
 			Vector<Vertex> tempVertices = new Vector<Vertex>(plane.getVertices().values());
