@@ -76,8 +76,10 @@ public class SproutsBoardPanel extends JPanel {
 			}
 			// TODO: v2.x returns null??
 			if (v1 == null || v2 == null) {
-				System.out.println(v1 + " OR " + v2 + " is empty?");
-				System.out.println("E|v1:" + edge.getNodes().getFirst().getUniqueID() + " E|v2:" + edge.getNodes().getSecond().getUniqueID());
+				// System.out.println(v1 + " OR " + v2 + " is empty?");
+				// System.out.println("E|v1:" +
+				// edge.getNodes().getFirst().getUniqueID() + " E|v2:" +
+				// edge.getNodes().getSecond().getUniqueID());
 			} else
 				g2.draw(new Line2D.Double(v1.getX(), v1.getY(), v2.getX(), v2.getY()));
 		}

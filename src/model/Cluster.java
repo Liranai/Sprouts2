@@ -1,9 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Vector;
 
 import lombok.Getter;
 
@@ -80,31 +80,44 @@ public class Cluster {
 		}
 	}
 
-	public Vector<Vertex> findCycle(Vertex start) {
+	/**
+	 * Finds the shortest cycle starting and ending from Vertex Start
+	 * 
+	 * @param start
+	 *            Vertex algorithm should start searching from
+	 * @return ArrayLIst<Vertex> of all neighbours in the found cycle, return
+	 *         null when no cycle found
+	 */
+	public static ArrayList<Vertex> findCycle(Vertex start) {
 		if (start.getEdges().isEmpty()) {
 			return null;
 		}
 
-		Queue<Vector<Vertex>> queue = new LinkedList<Vector<Vertex>>();
-		Vector<Vertex> v1 = new Vector<Vertex>();
+		Queue<ArrayList<Vertex>> queue = new LinkedList<ArrayList<Vertex>>();
+		ArrayList<Vertex> v1 = new ArrayList<Vertex>();
 		v1.add(start);
 		queue.add(v1);
 
 		while (!queue.isEmpty()) {
-			Vector<Vertex> evalPath = queue.poll();
+			ArrayList<Vertex> evalPath = queue.poll();
 			Vertex evalVertex = evalPath.get(evalPath.size() - 1);
-			if (evalVertex.equals(start)) {
+			if (evalVertex.equals(start) && evalPath.size() > 1) {
 				return evalPath;
 			} else {
 				for (Edge edge : evalVertex.getEdges().values()) {
-					Vector<Vertex> queuePath = (Vector<Vertex>) evalPath.clone();
+					ArrayList<Vertex> queuePath = new ArrayList<Vertex>(evalPath);
 					Vertex tempVertex = null;
 					if (edge.getNodes().getFirst().equals(evalVertex)) {
 						tempVertex = edge.getNodes().getSecond();
 					} else {
 						tempVertex = edge.getNodes().getFirst();
 					}
-					if (!queuePath.get(queuePath.size() - 2).equals(tempVertex)) {
+					if (evalPath.size() > 1) {
+						if (!queuePath.get(queuePath.size() - 2).equals(tempVertex)) {
+							queuePath.add(tempVertex);
+							queue.add(queuePath);
+						}
+					} else {
 						queuePath.add(tempVertex);
 						queue.add(queuePath);
 					}
@@ -113,34 +126,6 @@ public class Cluster {
 		}
 		return null;
 	}
-
-	// public Vector<Vertex> findCycle(Vertex start) {
-	// Vector<Integer> keysVisited = new Vector<Integer>();
-	// if (start.getEdges().isEmpty()) {
-	// return null;
-	// }
-	// Queue<Vertex> queue = new LinkedList<Vertex>();
-	// queue.add(start);
-	// boolean cycle = false;
-	// while (!queue.isEmpty()) {
-	// Vertex evalVertex = queue.poll();
-	// if (evalVertex.getUniqueID() == start.getUniqueID()) {
-	// cycle = true;
-	// break;
-	// }
-	// if (keysVisited.contains(evalVertex.getUniqueID())) {
-	// continue;
-	// }
-	// keysVisited.add(evalVertex.getUniqueID());
-	// for (Edge edge : evalVertex.getEdges().values()) {
-	// if (edge.getNodes().getFirst().equals(evalVertex))
-	// queue.add(edge.getNodes().getSecond());
-	// else
-	// queue.add(edge.getNodes().getFirst());
-	// }
-	// }
-	//
-	// }
 
 	public void setClusterType() {
 		for (Vertex vert : getVertices().values()) {
@@ -167,9 +152,14 @@ public class Cluster {
 		}
 	}
 
-	public static Vector<Cluster> clusterPlane(Plane plane) {
-		Vector<Cluster> clusters = new Vector<Cluster>();
-		Vector<Integer> keysSeen = new Vector<Integer>();
+	/**
+	 * 
+	 * @param plane
+	 * @return
+	 */
+	public static ArrayList<Cluster> clusterPlane(Plane plane) {
+		ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+		ArrayList<Integer> keysSeen = new ArrayList<Integer>();
 
 		for (Edge edge : plane.getEdges().values()) {
 			Vertex v1 = edge.getNodes().getFirst();

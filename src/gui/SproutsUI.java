@@ -28,6 +28,7 @@ public class SproutsUI extends JFrame {
 
 		setMinimumSize(new Dimension(BORDERSIZE + 25 * CIRCLESIZE + 16, BORDERSIZE + 25 * CIRCLESIZE + 42));
 		pack();
+		setAlwaysOnTop(true);
 		setVisible(true);
 		setLocationRelativeTo(null);
 	}

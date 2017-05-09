@@ -1,7 +1,7 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,19 +14,19 @@ public class Plane {
 	private HashMap<Integer, Vertex> vertices;
 	private HashMap<Integer, Edge> edges;
 	@Setter
-	private Vector<Cluster> clusters;
+	private ArrayList<Cluster> clusters;
 
 	private int uniqueID;
 
 	public Plane() {
 		this.vertices = new HashMap<Integer, Vertex>();
 		this.edges = new HashMap<Integer, Edge>();
-		this.clusters = new Vector<Cluster>();
+		this.clusters = new ArrayList<Cluster>();
 
 		uniqueID = acquireID();
 	}
 
-	public Plane(int id, HashMap<Integer, Vertex> vertices, HashMap<Integer, Edge> edges, Vector<Cluster> clusters) {
+	public Plane(int id, HashMap<Integer, Vertex> vertices, HashMap<Integer, Edge> edges, ArrayList<Cluster> clusters) {
 		this.uniqueID = id;
 		this.vertices = vertices;
 		this.edges = edges;

@@ -1,8 +1,8 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Vector;
 
 import lombok.Getter;
 import model.Cluster;
@@ -35,7 +35,7 @@ public class SproutsGameSolver implements Runnable {
 				for (Plane plane : root.getState().getPlanes().values()) {
 					plane.setClusters(Cluster.clusterPlane(plane));
 				}
-				Vector<Move> stuff = getLegalMoves(root.getState());
+				ArrayList<Move> stuff = getLegalMoves(root.getState());
 				// for (Cluster c : root.getState().getClusters()) {
 				// System.out.print("C:" + c.getClusterType() + " ");
 				// }
@@ -64,24 +64,34 @@ public class SproutsGameSolver implements Runnable {
 		}
 	}
 
-	public static Vector<Move> getLegalMoves(State state) {
-		Vector<Move> moves = new Vector<Move>();
+	public static ArrayList<Move> getLegalMoves(State state) {
+		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Plane plane : state.getPlanes().values()) {
-			Vector<Cluster> clusters = Cluster.clusterPlane(plane);
+			ArrayList<Cluster> clusters = Cluster.clusterPlane(plane);
 
 			// for (Cluster cluster : clusters) {
 			// cluster.setClusterType();
 			// System.out.print("C:" + cluster.getClusterType() + " ");
 			// }
 
-			System.out.println("CLUSTERS: " + clusters.size());
+			// System.out.println("CLUSTERS: " + clusters.size());
 			for (Cluster cluster : clusters) {
 				cluster.analyseCluster();
 				System.out.println(cluster.getClusterType() + " UF:" + cluster.getUniquenessFactor() + "\tUS:" + cluster.getUniquenessString());
+				// ArrayList<Vertex> path = null;
+				// for (Vertex v : cluster.getVertices().values()) {
+				// path = cluster.findCycle(v);
+				// if (path != null)
+				// break;
+				// }
+				// System.out.println("PATH = " + path);
+				// if (path != null) {
+				// System.out.println("Cycle of length: " + path.size());
+				// }
 			}
 
 			// System.out.println(plane);
-			Vector<Vertex> tempVertices = new Vector<Vertex>(plane.getVertices().values());
+			ArrayList<Vertex> tempVertices = new ArrayList<Vertex>(plane.getVertices().values());
 			for (int i = 0; i < tempVertices.size(); i++) {
 				Vertex vertex = tempVertices.get(i);
 				// System.out.println("v:" + vertex);
@@ -99,8 +109,8 @@ public class SproutsGameSolver implements Runnable {
 		return moves;
 	}
 
-	// public static Vector<Move> getIntraClusterMoves(State state) {
-	// Vector<Move> moves = new Vector<Move>();
+	// public static ArrayList<Move> getIntraClusterMoves(State state) {
+	// ArrayList<Move> moves = new ArrayList<Move>();
 	// for (Plane plane : state.getPlanes().values()) {
 	//
 	// for (Cluster cluster: plane.getClusters()) {
@@ -111,8 +121,8 @@ public class SproutsGameSolver implements Runnable {
 	// }
 	// }
 
-	public static Vector<Move> getInterClusterMoves(State state) {
-		Vector<Move> moves = new Vector<Move>();
+	public static ArrayList<Move> getInterClusterMoves(State state) {
+		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Plane plane : state.getPlanes().values()) {
 
 			for (Cluster cluster : plane.getClusters()) {

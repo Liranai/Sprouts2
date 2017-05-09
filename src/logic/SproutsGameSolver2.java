@@ -1,7 +1,7 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Vector;
 
 import gui.SproutsUI;
 import lombok.Getter;
@@ -26,12 +26,12 @@ public class SproutsGameSolver2 {
 	public void run() {
 		Random rand = new Random(System.currentTimeMillis());
 
-		Vector<Move> moves = null;
+		ArrayList<Move> moves = null;
 		do {
 			System.out.println(root.getState());
 			ui.repaint();
 			// try {
-			// Thread.sleep(2000);
+			// Thread.sleep(5000);
 			// } catch (InterruptedException e) {
 			// // TODO Auto-generated catch block
 			// e.printStackTrace();

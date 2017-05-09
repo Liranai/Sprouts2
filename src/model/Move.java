@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 import lombok.Getter;
 
 @Getter
@@ -85,6 +87,14 @@ public class Move {
 		makeEdges();
 		plane.getEdges().put(edge.getFirst().getUniqueID(), edge.getFirst());
 		plane.getEdges().put(edge.getSecond().getUniqueID(), edge.getSecond());
+		plane.getVertices().get(nodes.getFirst().getUniqueID()).addEdge(edge.getFirst());
+		plane.getVertices().get(nodes.getSecond().getUniqueID()).addEdge(edge.getSecond());
+		plane.getVertices().get(extraVertex.getUniqueID()).addEdge(edge.getFirst());
+		plane.getVertices().get(extraVertex.getUniqueID()).addEdge(edge.getSecond());
+
+		ArrayList<Vertex> cycle = Cluster.findCycle(extraVertex);
+		if (cycle != null)
+			System.out.println("Creates cylce: " + cycle.size() + " |> " + cycle);
 	}
 
 	public Pair<Edge, Edge> makeEdges() {
