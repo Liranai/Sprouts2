@@ -10,21 +10,23 @@ public class Move {
 	};
 
 	private Pair<Vertex, Vertex> nodes;
-	private Plane plane;
+	private Plane plane, origin;
 
 	private Pair<Edge, Edge> edge;
 	private Vertex extraVertex;
 
 	private MoveType type;
 
-	public Move(Pair<Vertex, Vertex> nodes, Plane plane) {
+	public Move(Pair<Vertex, Vertex> nodes, Plane plane, Plane origin) {
 		this.nodes = nodes;
 		this.plane = plane;
+		this.origin = origin;
 	}
 
-	public Move(Vertex v1, Vertex v2, Plane plane) {
+	public Move(Vertex v1, Vertex v2, Plane plane, Plane origin) {
 		nodes = new Pair<Vertex, Vertex>(v1, v2);
 		this.plane = plane;
+		this.origin = origin;
 	}
 
 	public Move(Pair<Vertex, Vertex> nodes, Plane plane, MoveType type) {
@@ -59,6 +61,22 @@ public class Move {
 		return extraVertex;
 	}
 
+	// public void makeMoveNew(State state){
+	// nodes.getFirst().increaseDegree(1);
+	// nodes.getSecond().increaseDegree(1);
+	// plane.getVertices().put(nodes.getFirst().getUniqueID(),
+	// nodes.getFirst());
+	// plane.getVertices().put(nodes.getSecond().getUniqueID(),
+	// nodes.getSecond());
+	// makeExtraVertex();
+	// plane.getVertices().put(extraVertex.getUniqueID(), extraVertex);
+	//
+	// origin.getVertices().remove(nodes.getFirst().getUniqueID());
+	// origin.getVertices().remove(nodes.getSecond().getUniqueID());
+	//
+	// plane.getEdges().put(key, value)
+	// }
+
 	public void makeMove(State state) {
 		plane.getVertices().get(nodes.getFirst().getUniqueID()).increaseDegree(1);
 		plane.getVertices().get(nodes.getSecond().getUniqueID()).increaseDegree(1);
@@ -77,7 +95,7 @@ public class Move {
 	}
 
 	public Move clone() {
-		return new Move(nodes.getFirst().clone(), nodes.getSecond().clone(), plane);
+		return new Move(nodes.getFirst().clone(), nodes.getSecond().clone(), plane, origin);
 	}
 
 	@Override

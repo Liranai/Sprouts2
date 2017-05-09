@@ -15,6 +15,7 @@ public class Vertex {
 	private int degree;
 	@Setter
 	private boolean original = false;
+	private HashMap<Integer, Edge> edges;
 	private HashMap<Integer, Plane> planes;
 
 	public Vertex() {
@@ -26,14 +27,16 @@ public class Vertex {
 	public Vertex(Plane plane) {
 		degree = 0;
 		uniqueID = acquireID();
+		edges = new HashMap<Integer, Edge>();
 		planes = new HashMap<Integer, Plane>();
 		planes.put(plane.getUniqueID(), plane);
 	}
 
-	public Vertex(int id, int degree, boolean original, HashMap<Integer, Plane> planes) {
+	public Vertex(int id, int degree, boolean original, HashMap<Integer, Edge> edges, HashMap<Integer, Plane> planes) {
 		this.uniqueID = id;
 		this.degree = degree;
 		this.original = original;
+		this.edges = edges;
 		this.planes = planes;
 	}
 
@@ -45,9 +48,13 @@ public class Vertex {
 		return false;
 	}
 
+	public void addEdge(Edge edge) {
+		edges.put(edge.getUniqueID(), edge);
+	}
+
 	@Override
 	protected Vertex clone() {
-		return new Vertex(uniqueID, degree, original, planes);
+		return new Vertex(uniqueID, degree, original, edges, planes);
 	}
 
 	@Override

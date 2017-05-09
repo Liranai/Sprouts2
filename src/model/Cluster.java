@@ -1,6 +1,8 @@
 package model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Vector;
 
 import lombok.Getter;
@@ -59,7 +61,7 @@ public class Cluster {
 		case 4:
 			if (structure.containsKey(3)) {
 				uniquenessFactor += structure.get(3) + 3 * Vertex.getNumberOfVertices();
-				// uniquenessString += structure.get(3) + "c";
+				uniquenessString += structure.get(3) + "c";
 			}
 		case 3:
 		case 2:
@@ -73,8 +75,72 @@ public class Cluster {
 				uniquenessString += structure.get(1) + "a";
 			}
 			break;
+		default:
+			uniquenessString += "0";
 		}
 	}
+
+	public Vector<Vertex> findCycle(Vertex start) {
+		if (start.getEdges().isEmpty()) {
+			return null;
+		}
+
+		Queue<Vector<Vertex>> queue = new LinkedList<Vector<Vertex>>();
+		Vector<Vertex> v1 = new Vector<Vertex>();
+		v1.add(start);
+		queue.add(v1);
+
+		while (!queue.isEmpty()) {
+			Vector<Vertex> evalPath = queue.poll();
+			Vertex evalVertex = evalPath.get(evalPath.size() - 1);
+			if (evalVertex.equals(start)) {
+				return evalPath;
+			} else {
+				for (Edge edge : evalVertex.getEdges().values()) {
+					Vector<Vertex> queuePath = (Vector<Vertex>) evalPath.clone();
+					Vertex tempVertex = null;
+					if (edge.getNodes().getFirst().equals(evalVertex)) {
+						tempVertex = edge.getNodes().getSecond();
+					} else {
+						tempVertex = edge.getNodes().getFirst();
+					}
+					if (!queuePath.get(queuePath.size() - 2).equals(tempVertex)) {
+						queuePath.add(tempVertex);
+						queue.add(queuePath);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	// public Vector<Vertex> findCycle(Vertex start) {
+	// Vector<Integer> keysVisited = new Vector<Integer>();
+	// if (start.getEdges().isEmpty()) {
+	// return null;
+	// }
+	// Queue<Vertex> queue = new LinkedList<Vertex>();
+	// queue.add(start);
+	// boolean cycle = false;
+	// while (!queue.isEmpty()) {
+	// Vertex evalVertex = queue.poll();
+	// if (evalVertex.getUniqueID() == start.getUniqueID()) {
+	// cycle = true;
+	// break;
+	// }
+	// if (keysVisited.contains(evalVertex.getUniqueID())) {
+	// continue;
+	// }
+	// keysVisited.add(evalVertex.getUniqueID());
+	// for (Edge edge : evalVertex.getEdges().values()) {
+	// if (edge.getNodes().getFirst().equals(evalVertex))
+	// queue.add(edge.getNodes().getSecond());
+	// else
+	// queue.add(edge.getNodes().getFirst());
+	// }
+	// }
+	//
+	// }
 
 	public void setClusterType() {
 		for (Vertex vert : getVertices().values()) {

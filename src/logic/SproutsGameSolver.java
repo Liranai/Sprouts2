@@ -91,13 +91,25 @@ public class SproutsGameSolver implements Runnable {
 					if ((vertex.equals(v2) && vertex.getDegree() > 1) || (!vertex.equals(v2) && (vertex.getDegree() > 2) || v2.getDegree() > 2))
 						continue;
 					else {
-						moves.add(new Move(vertex, v2, plane));
+						moves.add(new Move(vertex, v2, plane, plane));
 					}
 				}
 			}
 		}
 		return moves;
 	}
+
+	// public static Vector<Move> getIntraClusterMoves(State state) {
+	// Vector<Move> moves = new Vector<Move>();
+	// for (Plane plane : state.getPlanes().values()) {
+	//
+	// for (Cluster cluster: plane.getClusters()) {
+	// cluster.analyseCluster();
+	// }
+	//
+	//
+	// }
+	// }
 
 	public static Vector<Move> getInterClusterMoves(State state) {
 		Vector<Move> moves = new Vector<Move>();

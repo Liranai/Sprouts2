@@ -83,7 +83,7 @@ public class Plane {
 			clonedVertices.put(vertex.getUniqueID(), vertex.clone());
 		}
 		for (Edge edge : edges.values()) {
-			clonedEdges.put(edge.getUniqueID(), edge.clone());
+			clonedEdges.put(edge.getUniqueID(), edge.clone(clonedVertices));
 		}
 		return new Plane(uniqueID, clonedVertices, clonedEdges, clusters);
 	}
