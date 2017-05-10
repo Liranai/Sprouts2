@@ -153,9 +153,11 @@ public class Cluster {
 	}
 
 	/**
+	 * Creates an ArrayList<Cluster> of clusters found on the given plane
 	 * 
 	 * @param plane
-	 * @return
+	 *            to be clustered
+	 * @return ArrayList<Cluster> of all found clusters
 	 */
 	public static ArrayList<Cluster> clusterPlane(Plane plane) {
 		ArrayList<Cluster> clusters = new ArrayList<Cluster>();

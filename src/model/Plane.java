@@ -26,11 +26,10 @@ public class Plane {
 		uniqueID = acquireID();
 	}
 
-	public Plane(int id, HashMap<Integer, Vertex> vertices, HashMap<Integer, Edge> edges, ArrayList<Cluster> clusters) {
+	public Plane(int id, HashMap<Integer, Vertex> vertices, HashMap<Integer, Edge> edges) {
 		this.uniqueID = id;
 		this.vertices = vertices;
 		this.edges = edges;
-		this.clusters = clusters;
 	}
 
 	// public Cluster getClusterByType(int i) {
@@ -85,7 +84,7 @@ public class Plane {
 		for (Edge edge : edges.values()) {
 			clonedEdges.put(edge.getUniqueID(), edge.clone(clonedVertices));
 		}
-		return new Plane(uniqueID, clonedVertices, clonedEdges, clusters);
+		return new Plane(uniqueID, clonedVertices, clonedEdges);
 	}
 
 	@Override

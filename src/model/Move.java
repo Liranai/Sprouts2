@@ -63,6 +63,10 @@ public class Move {
 		return extraVertex;
 	}
 
+	public State makeMoveInState(State state) {
+		State newState = state.clone();
+	}
+
 	// public void makeMoveNew(State state){
 	// nodes.getFirst().increaseDegree(1);
 	// nodes.getSecond().increaseDegree(1);
