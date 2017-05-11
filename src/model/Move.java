@@ -63,26 +63,6 @@ public class Move {
 		return extraVertex;
 	}
 
-	public State makeMoveInState(State state) {
-		State newState = state.clone();
-	}
-
-	// public void makeMoveNew(State state){
-	// nodes.getFirst().increaseDegree(1);
-	// nodes.getSecond().increaseDegree(1);
-	// plane.getVertices().put(nodes.getFirst().getUniqueID(),
-	// nodes.getFirst());
-	// plane.getVertices().put(nodes.getSecond().getUniqueID(),
-	// nodes.getSecond());
-	// makeExtraVertex();
-	// plane.getVertices().put(extraVertex.getUniqueID(), extraVertex);
-	//
-	// origin.getVertices().remove(nodes.getFirst().getUniqueID());
-	// origin.getVertices().remove(nodes.getSecond().getUniqueID());
-	//
-	// plane.getEdges().put(key, value)
-	// }
-
 	public void makeMove(State state) {
 		plane.getVertices().get(nodes.getFirst().getUniqueID()).increaseDegree(1);
 		plane.getVertices().get(nodes.getSecond().getUniqueID()).increaseDegree(1);

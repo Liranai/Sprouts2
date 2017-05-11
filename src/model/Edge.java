@@ -1,7 +1,5 @@
 package model;
 
-import java.util.HashMap;
-
 import lombok.Getter;
 
 @Getter
@@ -21,10 +19,6 @@ public class Edge {
 		this.uniqueID = id;
 		this.plane = plane;
 		this.nodes = nodes;
-	}
-
-	protected Edge clone(HashMap<Integer, Vertex> clonedVertices) {
-		return new Edge(uniqueID, plane, new Pair<Vertex, Vertex>(clonedVertices.get(nodes.getFirst().getUniqueID()), clonedVertices.get(nodes.getSecond().getUniqueID())));
 	}
 
 	@Override

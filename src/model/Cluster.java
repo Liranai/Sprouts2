@@ -26,7 +26,6 @@ public class Cluster {
 	private HashMap<Integer, Integer> structure;
 
 	private int clusterType = -1;
-	private long uniquenessFactor = -1;
 	private String uniquenessString = "";
 	private int uniqueID;
 
@@ -48,7 +47,7 @@ public class Cluster {
 
 	public void analyseCluster() {
 		this.structure = new HashMap<Integer, Integer>();
-		uniquenessFactor = 0;
+		uniquenessString = "";
 		for (Vertex vert : getVertices().values()) {
 			if (structure.containsKey(vert.getDegree())) {
 				structure.put(vert.getDegree(), structure.get(vert.getDegree()) + 1);
@@ -60,18 +59,15 @@ public class Cluster {
 		switch (clusterType) {
 		case 4:
 			if (structure.containsKey(3)) {
-				uniquenessFactor += structure.get(3) + 3 * Vertex.getNumberOfVertices();
 				uniquenessString += structure.get(3) + "c";
 			}
 		case 3:
 		case 2:
 			if (structure.containsKey(2)) {
-				uniquenessFactor += structure.get(2) + 2 * Vertex.getNumberOfVertices();
 				uniquenessString += structure.get(2) + "b";
 			}
 		case 1:
 			if (structure.containsKey(1)) {
-				uniquenessFactor += structure.get(1) + Vertex.getNumberOfVertices();
 				uniquenessString += structure.get(1) + "a";
 			}
 			break;

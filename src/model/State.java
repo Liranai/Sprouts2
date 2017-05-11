@@ -33,7 +33,7 @@ public class State {
 		this.planes = planes;
 	}
 
-	/*
+	/**
 	 * Runs through all Planes EVERY TIME to collect all clusters TODO: This can
 	 * probably be optimized
 	 * 

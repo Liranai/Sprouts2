@@ -1,13 +1,12 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import lombok.Getter;
 import model.Cluster;
+import model.Edge;
 import model.Move;
-import model.Move.MoveType;
 import model.Node;
 import model.Plane;
 import model.State;
@@ -77,7 +76,7 @@ public class SproutsGameSolver implements Runnable {
 			// System.out.println("CLUSTERS: " + clusters.size());
 			for (Cluster cluster : clusters) {
 				cluster.analyseCluster();
-				System.out.println(cluster.getClusterType() + " UF:" + cluster.getUniquenessFactor() + "\tUS:" + cluster.getUniquenessString());
+				System.out.println(cluster.getClusterType() + "\tUS:" + cluster.getUniquenessString());
 				// ArrayList<Vertex> path = null;
 				// for (Vertex v : cluster.getVertices().values()) {
 				// path = cluster.findCycle(v);
@@ -109,70 +108,116 @@ public class SproutsGameSolver implements Runnable {
 		return moves;
 	}
 
-	// public static ArrayList<Move> getIntraClusterMoves(State state) {
-	// ArrayList<Move> moves = new ArrayList<Move>();
-	// for (Plane plane : state.getPlanes().values()) {
-	//
-	// for (Cluster cluster: plane.getClusters()) {
-	// cluster.analyseCluster();
-	// }
-	//
-	//
-	// }
-	// }
+	public static ArrayList<State> getInterClusterStates(State state) {
+		ArrayList<State> childStates = new ArrayList<State>();
 
-	public static ArrayList<Move> getInterClusterMoves(State state) {
-		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Plane plane : state.getPlanes().values()) {
-
 			for (Cluster cluster : plane.getClusters()) {
 				cluster.analyseCluster();
 			}
+			ArrayList<String> types = plane.getClusterTypes();
 
-			for (int i = 0; i < 5; i++) {
-				HashMap<Long, Cluster> vc1 = plane.getAllClustersByType(i);
-				if (vc1.isEmpty())
+			for (int i = 0; i < types.size(); i++) {
+				String type = types.get(i);
+				ArrayList<Cluster> typeClusters = plane.getClustersOfString(type);
+				if (typeClusters.isEmpty()) {
+					System.err.println("No clusters found of type " + type);
 					continue;
-				else {
-					for (Cluster c1 : vc1.values()) {
-						System.out.print("\nCT1: " + c1.getUniquenessFactor());
-						for (int j = i; j < 5; j++) {
-							HashMap<Long, Cluster> vc2 = plane.getAllClustersByTypeExcluding(j, c1);
-							if (vc2.isEmpty())
+				}
+				System.out.println(types);
+				Cluster c1 = typeClusters.get(0);
+				for (int j = i; j < types.size(); j++) {
+					String type2 = types.get(j);
+					ArrayList<Cluster> type2Clusters = plane.getClustersOfStringExcluding(type2, c1);
+					if (type2Clusters.isEmpty())
+						continue;
+					Cluster c2 = type2Clusters.get(0);
+					for (Vertex v1 : c1.getVertices().values()) {
+						if (v1.getDegree() > 2)
+							continue;
+						for (Vertex v2 : c2.getVertices().values()) {
+							if (v2.getDegree() > 2)
 								continue;
-							else {
-								for (Cluster c2 : vc2.values()) {
-									// if
-									// (vc1.containsKey(c2.getUniquenessFactor())
-									// && c2.getUniquenessFactor() != 0) {
-									// continue;
-									// }
-									System.out.print(" CT2: " + c2.getUniquenessFactor());
-									for (Vertex v1 : c1.getVertices().values()) {
-										if (v1.getDegree() > 2)
-											continue;
-										for (Vertex v2 : c2.getVertices().values()) {
-											if (v2.getDegree() > 2)
-												continue;
-											else {
-												moves.add(new Move(v1, v2, plane, MoveType.InterCluster));
-											}
-											if (j == 0 || j == 1 || j == 3)
-												break;
-										}
-										if (i == 0 || i == 1 || i == 3)
-											break;
-									}
-								}
-							}
+
+							State child = state.clone();
+							Plane modPlane = child.getPlanes().get(plane.getUniqueID());
+
+							Vertex newVertex = new Vertex(modPlane);
+							newVertex.setDegree(2);
+							Edge edge1 = new Edge(modPlane, modPlane.getVertices().get(v1.getUniqueID()), newVertex);
+							Edge edge2 = new Edge(modPlane, modPlane.getVertices().get(v2.getUniqueID()), newVertex);
+							modPlane.getEdges().put(edge1.getUniqueID(), edge1);
+							modPlane.getEdges().put(edge2.getUniqueID(), edge2);
+							newVertex.addEdge(edge1);
+							newVertex.addEdge(edge2);
+
+							modPlane.getVertices().put(newVertex.getUniqueID(), newVertex);
+							modPlane.getVertices().get(v1.getUniqueID()).addEdge(edge1);
+							modPlane.getVertices().get(v1.getUniqueID()).increaseDegree(1);
+							modPlane.getVertices().get(v2.getUniqueID()).addEdge(edge2);
+							modPlane.getVertices().get(v2.getUniqueID()).increaseDegree(1);
+							childStates.add(child);
 						}
 					}
 				}
 			}
 		}
-		System.out.print("\n");
-		return moves;
+		return childStates;
 	}
+
+	// public static ArrayList<Move> getInterClusterMoves(State state) {
+	// ArrayList<Move> moves = new ArrayList<Move>();
+	// for (Plane plane : state.getPlanes().values()) {
+	//
+	// for (Cluster cluster : plane.getClusters()) {
+	// cluster.analyseCluster();
+	// }
+	//
+	// for (int i = 0; i < 5; i++) {
+	// HashMap<String, Cluster> vc1 = plane.getAllClustersByType(i);
+	// if (vc1.isEmpty())
+	// continue;
+	// else {
+	// for (Cluster c1 : vc1.values()) {
+	// System.out.print("\nCT1: " + c1.getUniquenessString());
+	// for (int j = i; j < 5; j++) {
+	// HashMap<String, Cluster> vc2 = plane.getAllClustersByTypeExcluding(j,
+	// c1);
+	// if (vc2.isEmpty())
+	// continue;
+	// else {
+	// for (Cluster c2 : vc2.values()) {
+	// // if
+	// // (vc1.containsKey(c2.getUniquenessFactor())
+	// // && c2.getUniquenessFactor() != 0) {
+	// // continue;
+	// // }
+	// System.out.print(" CT2: " + c2.getUniquenessString());
+	// for (Vertex v1 : c1.getVertices().values()) {
+	// if (v1.getDegree() > 2)
+	// continue;
+	// for (Vertex v2 : c2.getVertices().values()) {
+	// if (v2.getDegree() > 2)
+	// continue;
+	// else {
+	// moves.add(new Move(v1, v2, plane, MoveType.InterCluster));
+	// }
+	// if (j == 0 || j == 1 || j == 3)
+	// break;
+	// }
+	// if (i == 0 || i == 1 || i == 3)
+	// break;
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	// }
+	// System.out.print("\n");
+	// return moves;
+	// }
 
 	private boolean isTerminalState(State state) {
 		for (Plane plane : state.getPlanes().values()) {

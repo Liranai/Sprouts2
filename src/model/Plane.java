@@ -32,44 +32,31 @@ public class Plane {
 		this.edges = edges;
 	}
 
-	// public Cluster getClusterByType(int i) {
-	// for (Cluster cluster : clusters) {
-	// if (cluster.getClusterType() == i) {
-	// return cluster;
-	// }
-	// }
-	// return null;
-	// }
-	//
-	// public Cluster getClusterByTypeExcluding(int i, Cluster exclude) {
-	// for (Cluster cluster : clusters) {
-	// if (cluster.equals(exclude))
-	// continue;
-	// if (cluster.getClusterType() == i) {
-	// return cluster;
-	// }
-	// }
-	// return null;
-	// }
-
-	public HashMap<Long, Cluster> getAllClustersByType(int i) {
-		HashMap<Long, Cluster> tempClusters = new HashMap<Long, Cluster>();
+	public ArrayList<String> getClusterTypes() {
+		ArrayList<String> types = new ArrayList<String>();
 		for (Cluster cluster : clusters) {
-			if (cluster.getClusterType() == i) {
-				tempClusters.putIfAbsent(cluster.getUniquenessFactor(), cluster);
-			}
+			if (!types.contains(cluster.getUniquenessString()))
+				types.add(cluster.getUniquenessString());
+		}
+		return types;
+	}
+
+	public ArrayList<Cluster> getClustersOfString(String id) {
+		ArrayList<Cluster> tempClusters = new ArrayList<Cluster>();
+		for (Cluster cluster : clusters) {
+			if (cluster.getUniquenessString().equals(id))
+				tempClusters.add(cluster);
 		}
 		return tempClusters;
 	}
 
-	public HashMap<Long, Cluster> getAllClustersByTypeExcluding(int i, Cluster exclude) {
-		HashMap<Long, Cluster> tempClusters = new HashMap<Long, Cluster>();
+	public ArrayList<Cluster> getClustersOfStringExcluding(String id, Cluster exclude) {
+		ArrayList<Cluster> tempClusters = new ArrayList<Cluster>();
 		for (Cluster cluster : clusters) {
 			if (cluster.equals(exclude))
 				continue;
-			if (cluster.getClusterType() == i) {
-				tempClusters.putIfAbsent(cluster.getUniquenessFactor(), cluster);
-			}
+			if (cluster.getUniquenessString().equals(id))
+				tempClusters.add(cluster);
 		}
 		return tempClusters;
 	}
@@ -82,7 +69,7 @@ public class Plane {
 			clonedVertices.put(vertex.getUniqueID(), vertex.clone());
 		}
 		for (Edge edge : edges.values()) {
-			clonedEdges.put(edge.getUniqueID(), edge.clone(clonedVertices));
+			clonedEdges.put(edge.getUniqueID(), edge.clone());
 		}
 		return new Plane(uniqueID, clonedVertices, clonedEdges);
 	}
