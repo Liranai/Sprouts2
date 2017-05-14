@@ -27,6 +27,15 @@ public class Edge {
 	}
 
 	@Override
+	public String toString() {
+		String str = "";
+		str += "ID:" + uniqueID;
+		str += " [V1:" + nodes.getFirst().getUniqueID() + " V2:" + nodes.getSecond().getUniqueID() + "] ";
+		str += super.toString();
+		return str;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		return ((Edge) obj).getUniqueID() == uniqueID;
 	}

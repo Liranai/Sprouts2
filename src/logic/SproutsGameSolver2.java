@@ -29,11 +29,10 @@ public class SproutsGameSolver2 {
 
 		ArrayList<State> childStates = findChildStates(root);
 		while (childStates.size() > 0) {
-			System.out.println(childStates.size());
-			root.setState(childStates.get(0));
+			root.setState(childStates.get(childStates.size() - 1));
 
 			System.out.println(root.getState());
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 			ui.repaint();
 			childStates = findChildStates(root);
 		}
@@ -46,15 +45,30 @@ public class SproutsGameSolver2 {
 		for (Plane plane : currentState.getPlanes().values()) {
 			plane.setClusters(Cluster.clusterPlane(plane));
 			for (Cluster cluster : plane.getClusters()) {
-				cluster.analyseCluster();
-				System.out.println(cluster.getClusterType() + "\tUS:" + cluster.getUniquenessString());
+				cluster.newAnalyseCluster(plane);
+				// System.out.println(cluster.getClusterType() + "\tUS:" +
+				// cluster.getUniquenessString());
 			}
 		}
 
 		children.addAll(findLegalInterClusterChildren(currentState));
+		findLegalIntraClusterChildren(currentState);
 
 		return children;
 
+	}
+
+	public static ArrayList<State> findLegalIntraClusterChildren(State state) {
+		ArrayList<State> children = new ArrayList<State>();
+
+		for (Plane plane : state.getPlanes().values()) {
+			for (Cluster cluster : plane.getClusters()) {
+				cluster.newAnalyseCluster(plane);
+				System.out.println(cluster.getClusterType() + "\tUS:" + cluster.getUniquenessString());
+			}
+		}
+
+		return children;
 	}
 
 	public static ArrayList<State> findLegalInterClusterChildren(State state) {

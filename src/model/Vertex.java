@@ -60,6 +60,16 @@ public class Vertex {
 	}
 
 	@Override
+	public String toString() {
+		String str = "ID:" + uniqueID;
+		str += " D:" + degree;
+		for (Edge edge : edges.values()) {
+			str += " E|" + edge.toString();
+		}
+		return str;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		return ((Vertex) obj).getUniqueID() == uniqueID;
 	}

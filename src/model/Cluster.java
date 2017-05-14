@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -43,6 +44,43 @@ public class Cluster {
 		this.edges = edges;
 		this.structure = structure;
 		this.clusterType = clusterType;
+	}
+
+	public void newAnalyseCluster(Plane plane) {
+		uniquenessString = "";
+		Vertex start = vertices.values().iterator().next();
+		start = plane.getVertices().get(start.getUniqueID());
+		if (start.getEdges().isEmpty()) {
+			uniquenessString = "0";
+			return;
+		}
+		HashSet<Integer> keysSeen = new HashSet<Integer>();
+		Queue<Vertex> queue = new LinkedList<Vertex>();
+		queue.add(start);
+
+		while (!queue.isEmpty()) {
+			Vertex tempVertex = queue.poll();
+			if (keysSeen.contains(tempVertex.getUniqueID()))
+				continue;
+			keysSeen.add(tempVertex.getUniqueID());
+			for (Edge edge : tempVertex.getEdges().values()) {
+				if (edge.getNodes().getFirst().equals(tempVertex))
+					queue.add(plane.getVertices().get(edge.getNodes().getSecond().getUniqueID()));
+				else
+					queue.add(plane.getVertices().get(edge.getNodes().getFirst().getUniqueID()));
+			}
+			switch (tempVertex.getDegree()) {
+			case 3:
+				uniquenessString += "c";
+				break;
+			case 2:
+				uniquenessString += "b";
+				break;
+			case 1:
+				uniquenessString += "a";
+				break;
+			}
+		}
 	}
 
 	public void analyseCluster() {
@@ -196,15 +234,15 @@ public class Cluster {
 						}
 					}
 					if (!joined) {
-						c.getVertices().putIfAbsent(v1.getUniqueID(), v1);
-						c.getVertices().putIfAbsent(v2.getUniqueID(), v2);
+						c.getVertices().putIfAbsent(v1.getUniqueID(), plane.getVertices().get(v1.getUniqueID()));
+						c.getVertices().putIfAbsent(v2.getUniqueID(), plane.getVertices().get(v2.getUniqueID()));
 						// c.setClusterType();
 						clustered = true;
 						break;
 					} else {
 						clustered = true;
 					}
-					c.getEdges().put(edge.getUniqueID(), edge);
+					c.getEdges().put(edge.getUniqueID(), plane.getEdges().get(edge.getUniqueID()));
 					if (clustered)
 						break;
 					// c.setClusterType();
@@ -212,9 +250,9 @@ public class Cluster {
 			}
 			if (!clustered) {
 				Cluster c = new Cluster();
-				c.getVertices().putIfAbsent(v1.getUniqueID(), v1);
-				c.getVertices().putIfAbsent(v2.getUniqueID(), v2);
-				c.getEdges().put(edge.getUniqueID(), edge);
+				c.getVertices().putIfAbsent(v1.getUniqueID(), plane.getVertices().get(v1.getUniqueID()));
+				c.getVertices().putIfAbsent(v2.getUniqueID(), plane.getVertices().get(v2.getUniqueID()));
+				c.getEdges().put(edge.getUniqueID(), plane.getEdges().get(edge.getUniqueID()));
 				// c.setClusterType();
 				clusters.add(c);
 			}

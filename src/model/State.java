@@ -87,7 +87,7 @@ public class State {
 	public String toString() {
 		String str = "";
 		for (Vertex vertex : getVertices()) {
-			str += "V" + vertex + " ID:" + vertex.getUniqueID() + " || ";
+			str += "V|" + vertex + " ID:" + vertex.getUniqueID() + " || ";
 		}
 		str += "\n";
 		for (Edge edge : getEdges()) {

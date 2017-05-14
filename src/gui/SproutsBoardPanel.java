@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -58,6 +59,9 @@ public class SproutsBoardPanel extends JPanel {
 			if (vertex.getVertex().isOriginal())
 				g2.setColor(Color.RED);
 			g2.fill(new Ellipse2D.Double(vertex.getX(), vertex.getY(), SproutsUI.CIRCLESIZE / 2, SproutsUI.CIRCLESIZE / 2));
+			g2.setColor(Color.CYAN);
+			g2.setFont(new Font("Calibri", Font.PLAIN, 10));
+			g2.drawString("" + vertex.getVertex().getUniqueID(), vertex.getX(), vertex.getY());
 		}
 		g2.setColor(Color.BLACK);
 		for (Edge edge : state.getEdges()) {
