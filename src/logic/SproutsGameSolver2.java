@@ -32,7 +32,7 @@ public class SproutsGameSolver2 {
 			root.setState(childStates.get(childStates.size() - 1));
 
 			System.out.println(root.getState());
-			// Thread.sleep(2000);
+			Thread.sleep(2000);
 			ui.repaint();
 			childStates = findChildStates(root);
 		}

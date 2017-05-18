@@ -46,9 +46,9 @@ public class Cluster {
 		this.clusterType = clusterType;
 	}
 
-	public String recursiveDFS(HashSet<Integer> keysSeen, Vertex currentVertex, Vertex lastVertex, Plane plane) {
+	public String recursiveDFS(String current, HashSet<Integer> keysSeen, Vertex currentVertex, Vertex lastVertex, Plane plane) {
 		currentVertex = plane.getVertices().get(currentVertex.getUniqueID());
-		String str = "";
+		String str = current;
 		if (currentVertex.getDegree() < 1) {
 			return "0";
 		}
@@ -79,13 +79,11 @@ public class Cluster {
 			if (lastVertex != null && neighbour.equals(lastVertex))
 				continue;
 
-			strs.add(recursiveDFS(keysSeen, neighbour, currentVertex, plane));
+			strs.add(recursiveDFS(str, keysSeen, neighbour, currentVertex, plane));
 		}
 		String result = "";
-		if (strs.size() < 1)
-			result += str;
 		for (String s : strs) {
-			result += str + s;
+			result += s;
 		}
 		return result;
 	}
@@ -93,7 +91,7 @@ public class Cluster {
 	public String searchCluster(Plane plane) {
 		for (Vertex v : vertices.values()) {
 			if (plane.getVertices().get(v.getUniqueID()).getDegree() == 1) {
-				return recursiveDFS(new HashSet<Integer>(), v, null, plane);
+				return recursiveDFS("", new HashSet<Integer>(), v, null, plane);
 			}
 		}
 		return "0";
