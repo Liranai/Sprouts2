@@ -76,7 +76,7 @@ public class SproutsGameSolver implements Runnable {
 			// System.out.println("CLUSTERS: " + clusters.size());
 			for (Cluster cluster : clusters) {
 				cluster.analyseCluster();
-				System.out.println(cluster.getClusterType() + "\tUS:" + cluster.getUniquenessString());
+				System.out.println(cluster.getClusterType() + "\tUS:" + cluster.getClusterForm());
 				// ArrayList<Vertex> path = null;
 				// for (Vertex v : cluster.getVertices().values()) {
 				// path = cluster.findCycle(v);

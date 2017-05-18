@@ -27,7 +27,7 @@ public class Cluster {
 	private HashMap<Integer, Integer> structure;
 
 	private int clusterType = -1;
-	private String uniquenessString = "";
+	private String clusterForm = "";
 	private int uniqueID;
 
 	public Cluster() {
@@ -46,12 +46,65 @@ public class Cluster {
 		this.clusterType = clusterType;
 	}
 
+	public String recursiveDFS(HashSet<Integer> keysSeen, Vertex currentVertex, Vertex lastVertex, Plane plane) {
+		currentVertex = plane.getVertices().get(currentVertex.getUniqueID());
+		String str = "";
+		if (currentVertex.getDegree() < 1) {
+			return "0";
+		}
+		switch (currentVertex.getDegree()) {
+		case 3:
+			str += "c";
+			break;
+		case 2:
+			str += "b";
+			break;
+		case 1:
+			str += "a";
+			break;
+		}
+		if (keysSeen.contains(currentVertex.getUniqueID()) || (currentVertex.getDegree() == 1 && !keysSeen.isEmpty())) {
+			str += ".";
+			return str;
+		}
+		keysSeen.add(currentVertex.getUniqueID());
+		ArrayList<String> strs = new ArrayList<String>();
+		for (Edge edge : currentVertex.getEdges().values()) {
+			Vertex neighbour = null;
+			if (edge.getNodes().getFirst().equals(currentVertex)) {
+				neighbour = edge.getNodes().getSecond();
+			} else {
+				neighbour = edge.getNodes().getFirst();
+			}
+			if (lastVertex != null && neighbour.equals(lastVertex))
+				continue;
+
+			strs.add(recursiveDFS(keysSeen, neighbour, currentVertex, plane));
+		}
+		String result = "";
+		if (strs.size() < 1)
+			result += str;
+		for (String s : strs) {
+			result += str + s;
+		}
+		return result;
+	}
+
+	public String searchCluster(Plane plane) {
+		for (Vertex v : vertices.values()) {
+			if (plane.getVertices().get(v.getUniqueID()).getDegree() == 1) {
+				return recursiveDFS(new HashSet<Integer>(), v, null, plane);
+			}
+		}
+		return "0";
+	}
+
 	public void newAnalyseCluster(Plane plane) {
-		uniquenessString = "";
+		clusterForm = "";
 		Vertex start = vertices.values().iterator().next();
 		start = plane.getVertices().get(start.getUniqueID());
 		if (start.getEdges().isEmpty()) {
-			uniquenessString = "0";
+			clusterForm = "0";
 			return;
 		}
 		HashSet<Integer> keysSeen = new HashSet<Integer>();
@@ -71,13 +124,13 @@ public class Cluster {
 			}
 			switch (tempVertex.getDegree()) {
 			case 3:
-				uniquenessString += "c";
+				clusterForm += "c";
 				break;
 			case 2:
-				uniquenessString += "b";
+				clusterForm += "b";
 				break;
 			case 1:
-				uniquenessString += "a";
+				clusterForm += "a";
 				break;
 			}
 		}
@@ -85,7 +138,7 @@ public class Cluster {
 
 	public void analyseCluster() {
 		this.structure = new HashMap<Integer, Integer>();
-		uniquenessString = "";
+		clusterForm = "";
 		for (Vertex vert : getVertices().values()) {
 			if (structure.containsKey(vert.getDegree())) {
 				structure.put(vert.getDegree(), structure.get(vert.getDegree()) + 1);
@@ -97,20 +150,20 @@ public class Cluster {
 		switch (clusterType) {
 		case 4:
 			if (structure.containsKey(3)) {
-				uniquenessString += structure.get(3) + "c";
+				clusterForm += structure.get(3) + "c";
 			}
 		case 3:
 		case 2:
 			if (structure.containsKey(2)) {
-				uniquenessString += structure.get(2) + "b";
+				clusterForm += structure.get(2) + "b";
 			}
 		case 1:
 			if (structure.containsKey(1)) {
-				uniquenessString += structure.get(1) + "a";
+				clusterForm += structure.get(1) + "a";
 			}
 			break;
 		default:
-			uniquenessString += "0";
+			clusterForm += "0";
 		}
 	}
 
