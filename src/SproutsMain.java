@@ -1,16 +1,16 @@
 
-import gui.SproutsUI;
+import gui.SproutsUI2;
 import logic.SproutsGameSolver2;
-import model.State;
+import model.State2;
 
 public class SproutsMain {
 
 	public static void main(String[] args) {
 
-		State state = new State(10);
+		State2 state = new State2(3);
 		// System.out.println(state);
 		SproutsGameSolver2 solver = new SproutsGameSolver2(state);
-		SproutsUI ui = new SproutsUI(state, solver.getRoot());
+		SproutsUI2 ui = new SproutsUI2(state, solver.getRoot());
 		solver.setUi(ui);
 		try {
 			solver.run();

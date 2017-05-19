@@ -1,8 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -28,6 +30,7 @@ public class Cluster {
 
 	private int clusterType = -1;
 	private String clusterForm = "";
+	private ArrayList<String> subClusters;
 	private int uniqueID;
 
 	public Cluster() {
@@ -89,17 +92,46 @@ public class Cluster {
 	}
 
 	public String searchCluster(Plane plane) {
+		String result = "";
 		for (Vertex v : vertices.values()) {
 			if (plane.getVertices().get(v.getUniqueID()).getDegree() == 1) {
-				return recursiveDFS("", new HashSet<Integer>(), v, null, plane);
+				result = recursiveDFS("", new HashSet<Integer>(), v, null, plane);
+				break;
 			}
 		}
-		return "0";
+		if (result == "") {
+			result = recursiveDFS("", new HashSet<Integer>(), vertices.values().iterator().next(), null, plane);
+		}
+
+		StringBuilder bldr = new StringBuilder();
+		ArrayList<String> splits = new ArrayList<String>();
+		for (int i = 0; i < result.length(); i++) {
+			if (result.charAt(i) != '.')
+				bldr.append(result.charAt(i));
+			else {
+				bldr.append('.');
+				splits.add(bldr.toString());
+				bldr = new StringBuilder();
+			}
+		}
+		if (bldr.length() > 1)
+			splits.add(bldr.toString());
+
+		if (splits.size() > 1)
+			Collections.sort(splits);
+		result = "";
+		for (String str : splits) {
+			result += str;
+		}
+		this.subClusters = splits;
+
+		return result;
 	}
 
-	public void newAnalyseCluster(Plane plane) {
+	public void analyseCluster(Plane plane) {
 		clusterForm = "";
-		Vertex start = vertices.values().iterator().next();
+		Iterator<Vertex> iter = vertices.values().iterator();
+		Vertex start = plane.getVertices().get(iter.next().getUniqueID());
 		start = plane.getVertices().get(start.getUniqueID());
 		if (start.getEdges().isEmpty()) {
 			clusterForm = "0";
@@ -111,13 +143,16 @@ public class Cluster {
 
 		while (!queue.isEmpty()) {
 			Vertex tempVertex = queue.poll();
+			if (!plane.getVertices().containsKey(tempVertex.getUniqueID()))
+				continue;
 			if (keysSeen.contains(tempVertex.getUniqueID()))
 				continue;
 			keysSeen.add(tempVertex.getUniqueID());
 			for (Edge edge : tempVertex.getEdges().values()) {
-				if (edge.getNodes().getFirst().equals(tempVertex))
-					queue.add(plane.getVertices().get(edge.getNodes().getSecond().getUniqueID()));
-				else
+				if (edge.getNodes().getFirst().equals(tempVertex)) {
+					if (plane.getVertices().containsKey(edge.getNodes().getSecond().getUniqueID()))
+						queue.add(plane.getVertices().get(edge.getNodes().getSecond().getUniqueID()));
+				} else if (plane.getVertices().containsKey(edge.getNodes().getFirst().getUniqueID()))
 					queue.add(plane.getVertices().get(edge.getNodes().getFirst().getUniqueID()));
 			}
 			switch (tempVertex.getDegree()) {
@@ -134,7 +169,7 @@ public class Cluster {
 		}
 	}
 
-	public void analyseCluster() {
+	public void oldAnalyseCluster() {
 		this.structure = new HashMap<Integer, Integer>();
 		clusterForm = "";
 		for (Vertex vert : getVertices().values()) {

@@ -24,7 +24,6 @@ public class State {
 			plane.getVertices().put(vertex.getUniqueID(), vertex);
 			Cluster cluster = new Cluster();
 			cluster.getVertices().put(vertex.getUniqueID(), vertex);
-			cluster.setClusterType();
 			plane.getClusters().add(cluster);
 		}
 	}
@@ -94,8 +93,8 @@ public class State {
 			str += "E|v1:" + edge.getNodes().getFirst().getUniqueID() + " E|v2:" + edge.getNodes().getSecond().getUniqueID() + " || ";
 		}
 		str += "\n";
-		for (Integer key : planes.keySet()) {
-			str += "P|vs:" + planes.get(key).getVertices();
+		for (Plane plane : planes.values()) {
+			str += "P|vs:" + plane.getUniqueID() + " " + plane.getVertices() + " || ";
 		}
 		return str;
 	}

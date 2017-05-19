@@ -83,7 +83,7 @@ public class Move {
 
 	public Pair<Edge, Edge> makeEdges() {
 		if (edge == null) {
-			edge = new Pair<Edge, Edge>(new Edge(plane, nodes.getFirst(), makeExtraVertex()), new Edge(plane, nodes.getSecond(), makeExtraVertex()));
+			edge = new Pair<Edge, Edge>(new Edge(nodes.getFirst(), makeExtraVertex()), new Edge(nodes.getSecond(), makeExtraVertex()));
 		}
 		return edge;
 	}

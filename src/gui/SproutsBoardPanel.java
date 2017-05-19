@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import lombok.Setter;
 import model.Edge;
 import model.State;
+import model.State2;
 import model.Vertex;
 
 public class SproutsBoardPanel extends JPanel {
