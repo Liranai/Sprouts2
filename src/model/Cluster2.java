@@ -211,6 +211,45 @@ public class Cluster2 {
 		return null;
 	}
 
+	public static ArrayList<Object[]> findCycleObj(Vertex2 start, State2 state) {
+		if (start.getEdge_ids().isEmpty()) {
+			return null;
+		}
+
+		Queue<ArrayList<Object[]>> queue = new LinkedList<ArrayList<Object[]>>();
+		ArrayList<Object[]> v1 = new ArrayList<Object[]>();
+		v1.add(new Object[] { start, null });
+		queue.add(v1);
+
+		while (!queue.isEmpty()) {
+			ArrayList<Object[]> evalPath = queue.poll();
+			Vertex2 evalVertex = (Vertex2) evalPath.get(evalPath.size() - 1)[0];
+			if (evalVertex.equals(start) && evalPath.size() > 1) {
+				return evalPath;
+			} else {
+				for (Integer edge_id : evalVertex.getEdge_ids()) {
+					ArrayList<Object[]> queuePath = new ArrayList<Object[]>(evalPath);
+					Vertex2 tempVertex = null;
+					if (state.getEdges().get(edge_id).getNodes().getFirst().equals(evalVertex.getUniqueID())) {
+						tempVertex = state.getVertices().get(state.getEdges().get(edge_id).getNodes().getSecond());
+					} else {
+						tempVertex = state.getVertices().get(state.getEdges().get(edge_id).getNodes().getFirst());
+					}
+					if (evalPath.size() > 1) {
+						if (!queuePath.get(queuePath.size() - 2).equals(tempVertex)) {
+							queuePath.add(new Object[] { tempVertex, edge_id });
+							queue.add(queuePath);
+						}
+					} else {
+						queuePath.add(new Object[] { tempVertex, edge_id });
+						queue.add(queuePath);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Creates an ArrayList<Cluster> of clusters found on the given plane
 	 * 

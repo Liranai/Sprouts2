@@ -262,14 +262,33 @@ public class SproutsGameSolver2 {
 		extraVertex.addEdge(edge1.getUniqueID());
 		extraVertex.addEdge(edge2.getUniqueID());
 
-		ArrayList<Vertex2> cycle = Cluster2.findCycle(extraVertex, clonedState);
+		ArrayList<Object[]> cycle = Cluster2.findCycleObj(extraVertex, clonedState);
+		ArrayList<Vertex2> cycleVertices = new ArrayList<Vertex2>();
+		ArrayList<Integer> edge_ids = new ArrayList<Integer>();
+		for (Object[] obj : cycle) {
+			cycleVertices.add((Vertex2) obj[0]);
+			if (obj[1] != null) {
+				edge_ids.add((Integer) obj[1]);
+			}
+		}
+
 		for (Vertex2 vertex : clusterVertices.values()) {
-			if (cycle.contains(vertex))
+			if (cycleVertices.contains(vertex))
 				continue;
 			extraPlane.getVertex_ids().add(vertex.getUniqueID());
 			clonedPlane.getVertex_ids().remove(vertex.getUniqueID());
 			clonedState.getVertices().get(vertex.getUniqueID()).getPlane_ids().add(extraPlane.getUniqueID());
 			clonedState.getVertices().get(vertex.getUniqueID()).getPlane_ids().remove(clonedPlane.getUniqueID());
+			for (Integer edge_id : vertex.getEdge_ids()) {
+				extraPlane.getEdge_ids().add(edge_id);
+				clonedPlane.getEdge_ids().remove(edge_id);
+				clonedState.getEdges().get(edge_id).getPlane_ids().add(extraPlane.getUniqueID());
+				clonedState.getEdges().get(edge_id).getPlane_ids().remove(clonedPlane.getUniqueID());
+			}
+		}
+		for (Integer edge_id : edge_ids) {
+			extraPlane.getEdge_ids().add(edge_id);
+			clonedState.getEdges().get(edge_id).getPlane_ids().add(extraPlane.getUniqueID());
 		}
 
 		for (Cluster2 cluster : include) {
