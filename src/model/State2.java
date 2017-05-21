@@ -150,16 +150,17 @@ public class State2 {
 
 	public String toString() {
 		String str = "";
-		for (Vertex2 vertex : vertices.values()) {
-			str += "V|" + vertex.toString(this) + " ID:" + vertex.getUniqueID() + " || ";
-		}
-		str += "\n";
+		// for (Vertex2 vertex : vertices.values()) {
+		// str += "V|" + vertex.toString(this) + " ID:" + vertex.getUniqueID() +
+		// " || ";
+		// }
+		// str += "\n";
 		for (Edge2 edge : edges.values()) {
 			str += "E|v1:" + edge.getNodes().getFirst() + " E|v2:" + edge.getNodes().getSecond() + " || ";
 		}
 		str += "\n";
 		for (Plane2 plane : planes.values()) {
-			str += "P|vs:" + plane.getUniqueID() + " " + plane.getVertex_ids() + " || ";
+			str += "P|vs:" + plane.getUniqueID() + " V:" + plane.getVertex_ids() + " || E:" + plane.getEdge_ids();
 		}
 		return str;
 	}

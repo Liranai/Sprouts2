@@ -58,6 +58,9 @@ public class Vertex2 {
 	public String toString(State2 state) {
 		String str = "ID:" + uniqueID;
 		str += " D:" + degree;
+		for (Integer plane_id : plane_ids) {
+			str += " P:" + plane_id;
+		}
 		for (Integer edge_id : edge_ids) {
 			str += " E|" + state.getEdges().get(edge_id).toString();
 		}

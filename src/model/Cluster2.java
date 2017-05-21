@@ -231,13 +231,13 @@ public class Cluster2 {
 
 			boolean clustered = false;
 			for (Cluster2 c : clusters) {
-				if (c.getVertices().containsKey(state.getEdges().get(edge_id).getNodes().getFirst()) || c.getVertices().containsKey(state.getEdges().get(edge_id).getNodes().getSecond())) {
+				if (c.getVertices().containsKey(v1.getUniqueID()) || c.getVertices().containsKey(v2.getUniqueID())) {
 					boolean joined = false;
-					if (c.getVertices().containsKey(state.getEdges().get(edge_id).getNodes().getFirst())) {
+					if (c.getVertices().containsKey(v1.getUniqueID())) {
 						for (Cluster2 c2 : clusters) {
 							if (c2.equals(c))
 								continue;
-							if (c2.getVertices().containsKey(state.getEdges().get(edge_id).getNodes().getSecond())) {
+							if (c2.getVertices().containsKey(v2.getUniqueID())) {
 								joinClusters(c, c2);
 								clusters.remove(c2);
 								// c.setClusterType();
@@ -245,11 +245,11 @@ public class Cluster2 {
 								break;
 							}
 						}
-					} else if (c.getVertices().containsKey(state.getEdges().get(edge_id).getNodes().getSecond())) {
+					} else if (c.getVertices().containsKey(v2.getUniqueID())) {
 						for (Cluster2 c2 : clusters) {
 							if (c2.equals(c))
 								continue;
-							if (c2.getVertices().containsKey(state.getEdges().get(edge_id).getNodes().getFirst())) {
+							if (c2.getVertices().containsKey(v1.getUniqueID())) {
 								joinClusters(c, c2);
 								clusters.remove(c2);
 								// c.setClusterType();
@@ -261,6 +261,7 @@ public class Cluster2 {
 					if (!joined) {
 						c.getVertices().putIfAbsent(v1.getUniqueID(), state.getVertices().get(v1.getUniqueID()));
 						c.getVertices().putIfAbsent(v2.getUniqueID(), state.getVertices().get(v2.getUniqueID()));
+						c.getEdges().put(edge_id, state.getEdges().get(edge_id));
 						// c.setClusterType();
 						clustered = true;
 						break;
@@ -285,6 +286,8 @@ public class Cluster2 {
 
 		for (Integer key : state.getVertices().keySet()) {
 			if (keysSeen.contains(key))
+				continue;
+			if (!state.getVertices().get(key).getPlane_ids().contains(plane.getUniqueID()))
 				continue;
 			Cluster2 c = new Cluster2();
 			c.getVertices().put(state.getVertices().get(key).getUniqueID(), state.getVertices().get(key));
