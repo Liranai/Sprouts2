@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import gui.SproutsUI2;
+import gui.StateViewer;
 import lombok.Getter;
 import lombok.Setter;
 import model.Cluster2;
@@ -30,7 +31,8 @@ public class SproutsGameSolver2 {
 		Random rand = new Random(System.currentTimeMillis());
 
 		ArrayList<State2> childStates = findChildStates(root);
-		while (childStates.size() > 0) {
+		// while (childStates.size() > 0) {
+		for (int i = 0; i < 3; i++) {
 			root.setState(childStates.get(rand.nextInt(childStates.size())));
 
 			System.out.println(root.getState());
@@ -40,6 +42,10 @@ public class SproutsGameSolver2 {
 		}
 		System.out.println("FINAL STATE:\n" + root.getState());
 		ui.repaint();
+
+		StateViewer viewer = new StateViewer();
+		viewer.drawState(root.getState());
+
 	}
 
 	public static ArrayList<State2> findChildStates(Node2 node) {
@@ -289,6 +295,10 @@ public class SproutsGameSolver2 {
 		for (Integer edge_id : edge_ids) {
 			extraPlane.getEdge_ids().add(edge_id);
 			clonedState.getEdges().get(edge_id).getPlane_ids().add(extraPlane.getUniqueID());
+		}
+		for (Vertex2 vertex : cycleVertices) {
+			extraPlane.getVertex_ids().add(vertex.getUniqueID());
+			clonedState.getVertices().get(vertex.getUniqueID()).getPlane_ids().add(extraPlane.getUniqueID());
 		}
 
 		for (Cluster2 cluster : include) {
