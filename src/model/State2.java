@@ -83,52 +83,21 @@ public class State2 {
 		return extraPlane;
 	}
 
-//@formatter:off
-	/**
-	 * Runs through all Planes EVERY TIME to collect all clusters TODO: This can
-	 * probably be optimized
-	 * 
-	 * @return
-	 */
-	/*public HashSet<Cluster> getClusters() {
-		HashSet<Cluster> allClusters = new HashSet<Cluster>();
+	public boolean isTerminal() {
 		for (Plane2 plane : planes.values()) {
-			allClusters.addAll(plane.getClusters());
+			int open_nodes = 0;
+			for (Integer vertex_id : plane.getVertex_ids()) {
+				if (vertices.get(vertex_id).getDegree() < 2)
+					return false;
+				if (vertices.get(vertex_id).getDegree() < 3) {
+					if (open_nodes > 0) {
+						return false;
+					}
+					open_nodes++;
+				}
+			}
 		}
-		return allClusters;
-	}
-
-	/**
-	 * Runs through all Planes EVERY TIME to collect all vertices TODO: This can
-	 * probably be optimized
-	 * 
-	 * @return
-	 */
-	/*public HashSet<Vertex2> getVertices() {
-		HashSet<Vertex2> allVertices = new HashSet<Vertex2>();
-		for (Plane2 plane : planes.values()) {
-			allVertices.addAll(plane.getVertices().values());
-		}
-		return allVertices;
-	}
-
-	/**
-	 * Runs through all Planes EVERY TIME to collect all edges TODO: This can
-	 * probably be optimized
-	 * 
-	 * @return
-	 */
-	/*public HashSet<Edge2> getEdges() {
-		HashSet<Edge2> allEdges = new HashSet<Edge2>();
-		for (Plane2 plane : planes.values()) {
-			allEdges.addAll(plane.getEdges().values());
-		}
-		return allEdges;
-	}*/
-	//@formatter:on
-
-	public int getNumberOfVertices() {
-		return num_of_vertices;
+		return true;
 	}
 
 	@Override

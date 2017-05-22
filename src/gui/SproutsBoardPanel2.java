@@ -44,7 +44,7 @@ public class SproutsBoardPanel2 extends JPanel {
 				// x = v.getUniqueID() * SproutsUI.OFFSET;
 			} else {
 				x = (((this.getWidth() - SproutsUI.OFFSET) / 10) * (((v.getUniqueID() - 1 - State2.SPROUTS) % 10))) + SproutsUI.OFFSET;
-				y = (((this.getHeight() - SproutsUI.OFFSET) / (int) Math.ceil((state.getNumberOfVertices() / 10.0) + 1)) * (int) Math.ceil(((v.getUniqueID() - State.SPROUTS) / 10.0))
+				y = (((this.getHeight() - SproutsUI.OFFSET) / (int) Math.ceil((state.getNum_of_vertices() / 10.0) + 1)) * (int) Math.ceil(((v.getUniqueID() - State.SPROUTS) / 10.0))
 						+ SproutsUI.OFFSET) + rand.nextInt(20);
 			}
 			uiv.setX(x);

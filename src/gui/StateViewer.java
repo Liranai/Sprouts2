@@ -35,6 +35,7 @@ public class StateViewer extends JFrame {
 	}
 
 	public void drawState(State2 state) {
+		parent.removeAll();
 		GridBagLayout gbl = new GridBagLayout();
 		parent.setLayout(gbl);
 		int panels_per_x = (int) Math.ceil(Math.sqrt(state.getNum_of_planes()));

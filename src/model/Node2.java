@@ -24,4 +24,8 @@ public class Node2 {
 	public void addChild(Node2 child) {
 		children.add(child);
 	}
+
+	public boolean isTerminal() {
+		return state.isTerminal();
+	}
 }
