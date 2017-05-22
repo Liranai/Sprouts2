@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Cluster2 {
@@ -27,7 +28,8 @@ public class Cluster2 {
 	private HashMap<Integer, Edge2> edges;
 	private HashMap<Integer, Integer> structure;
 
-	private int clusterType = -1;
+	@Setter
+	private String clusterComplexForm = "";
 	private String clusterForm = "";
 	private ArrayList<String> subClusters;
 	private int uniqueID;
@@ -40,12 +42,11 @@ public class Cluster2 {
 		uniqueID = acquireID();
 	}
 
-	public Cluster2(int id, HashMap<Integer, Vertex2> vertices, HashMap<Integer, Edge2> edges, HashMap<Integer, Integer> structure, int clusterType) {
+	public Cluster2(int id, HashMap<Integer, Vertex2> vertices, HashMap<Integer, Edge2> edges, HashMap<Integer, Integer> structure) {
 		this.uniqueID = id;
 		this.vertices = vertices;
 		this.edges = edges;
 		this.structure = structure;
-		this.clusterType = clusterType;
 	}
 
 	public String recursiveDFS(String current, HashSet<Integer> keysSeen, Vertex2 currentVertex, Vertex2 lastVertex, Plane2 plane, State2 state) {
@@ -93,6 +94,9 @@ public class Cluster2 {
 	public String searchCluster(Plane2 plane, State2 state) {
 		String result = "";
 		for (Vertex2 v : vertices.values()) {
+			if (state.getVertices().get(v.getUniqueID()).getDegree() == 0) {
+				return "0";
+			}
 			if (state.getVertices().get(v.getUniqueID()).getDegree() == 1) {
 				result = recursiveDFS("", new HashSet<Integer>(), v, null, plane, state);
 				break;
@@ -355,7 +359,7 @@ public class Cluster2 {
 		for (Integer key : structure.keySet()) {
 			clonedStructure.put(key, structure.get(key));
 		}
-		return new Cluster2(uniqueID, clonedVertices, clonedEdges, clonedStructure, clusterType);
+		return new Cluster2(uniqueID, clonedVertices, clonedEdges, clonedStructure);
 	}
 
 	@Override

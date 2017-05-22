@@ -32,8 +32,8 @@ public class Plane2 {
 	public ArrayList<String> getClusterTypes() {
 		ArrayList<String> types = new ArrayList<String>();
 		for (Cluster2 cluster : clusters) {
-			if (!types.contains(cluster.getClusterForm()))
-				types.add(cluster.getClusterForm());
+			if (!types.contains(cluster.getClusterComplexForm()))
+				types.add(cluster.getClusterComplexForm());
 		}
 		return types;
 	}
@@ -41,7 +41,7 @@ public class Plane2 {
 	public ArrayList<Cluster2> getClustersOfString(String id) {
 		ArrayList<Cluster2> tempClusters = new ArrayList<Cluster2>();
 		for (Cluster2 cluster : clusters) {
-			if (cluster.getClusterForm().equals(id))
+			if (cluster.getClusterComplexForm().equals(id))
 				tempClusters.add(cluster);
 		}
 		return tempClusters;
@@ -52,7 +52,7 @@ public class Plane2 {
 		for (Cluster2 cluster : clusters) {
 			if (cluster.equals(exclude))
 				continue;
-			if (cluster.getClusterForm().equals(id))
+			if (cluster.getClusterComplexForm().equals(id))
 				tempClusters.add(cluster);
 		}
 		return tempClusters;

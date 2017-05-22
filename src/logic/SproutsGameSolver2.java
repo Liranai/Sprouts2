@@ -39,6 +39,7 @@ public class SproutsGameSolver2 {
 			// Thread.sleep(2000);
 			ui.repaint();
 			childStates = findChildStates(root);
+
 		}
 		System.out.println("FINAL STATE:\n" + root.getState());
 		ui.repaint();
@@ -54,28 +55,17 @@ public class SproutsGameSolver2 {
 
 		for (Plane2 plane : currentState.getPlanes().values()) {
 			plane.setClusters(Cluster2.clusterPlane(plane, currentState));
-			// System.out.println("");
 			for (Cluster2 cluster : plane.getClusters()) {
 				cluster.analyseCluster(plane, currentState);
-
-				// StringBuilder bldr = new StringBuilder();
-				// for (Vertex2 v : cluster.getVertices().values())
-				// bldr.append(v.toString(currentState) + " || ");
-				// for (Edge2 e : cluster.getEdges().values()) {
-				// bldr.append(e.toString() + " ");
-				// bldr.append(e.getPlane_ids() + " |:| ");
-				// }
-				//
-				// System.out.println("Plane: " + plane.getUniqueID() + " | " +
-				// plane.getVertex_ids() + " " + bldr.toString());
-				// System.out.println("CF:" + cluster.getClusterForm() + "\tRS:
-				// " + cluster.searchCluster(plane, currentState));
+				cluster.setClusterComplexForm(cluster.searchCluster(plane, currentState));
+				// System.out.println("CF:" + cluster.getClusterForm() + "\tRS:"
+				// + cluster.searchCluster(plane, currentState));
 			}
 		}
 
 		children.addAll(findLegalInterClusterChildren(currentState));
-		children.addAll(findLegalNooseIntraClusterChildren(currentState));
-		children.addAll(findLegalLoopIntraClusterChildren(currentState));
+		children.addAll(findAdvancedLegalNooseIntraClusterChildren(currentState));
+		children.addAll(findAdvancedLegalLoopIntraClusterChildren(currentState));
 
 		return children;
 	}
@@ -117,6 +107,40 @@ public class SproutsGameSolver2 {
 		return children;
 	}
 
+	public static ArrayList<State2> findAdvancedLegalNooseIntraClusterChildren(State2 state) {
+		ArrayList<State2> children = new ArrayList<State2>();
+
+		for (Plane2 plane : state.getPlanes().values()) {
+			ArrayList<String> clusterTypes = plane.getClusterTypes();
+			for (int n = 0; n < clusterTypes.size(); n++) {
+				Cluster2 cluster = plane.getClustersOfString(clusterTypes.get(n)).get(0);
+				for (Vertex2 v1 : cluster.getVertices().values()) {
+					if (v1.getDegree() > 1) {
+						continue;
+					}
+					ArrayList<Cluster2> clusters = new ArrayList<Cluster2>();
+					for (Cluster2 c : plane.getClusters()) {
+						if (c.equals(cluster))
+							continue;
+						clusters.add(c);
+					}
+					for (int i = 0; i < clusters.size() * 2; i++) {
+						String binary = Integer.toBinaryString(i);
+						ArrayList<Cluster2> clusterSublist = new ArrayList<Cluster2>();
+						for (int j = 0; j < binary.length(); j++) {
+							if (binary.charAt(j) == '1')
+								clusterSublist.add(clusters.get(j));
+						}
+						children.add(nooseModification(state, plane.getUniqueID(), v1.getUniqueID(), clusterSublist));
+					}
+
+				}
+			}
+		}
+
+		return children;
+	}
+
 	public static ArrayList<State2> findLegalNooseIntraClusterChildren(State2 state) {
 		ArrayList<State2> children = new ArrayList<State2>();
 
@@ -146,6 +170,47 @@ public class SproutsGameSolver2 {
 			}
 		}
 
+		return children;
+	}
+
+	public static ArrayList<State2> findAdvancedLegalLoopIntraClusterChildren(State2 state) {
+		ArrayList<State2> children = new ArrayList<State2>();
+		for (Plane2 plane : state.getPlanes().values()) {
+			ArrayList<String> clusterTypes = plane.getClusterTypes();
+			for (int n = 0; n < clusterTypes.size(); n++) {
+				Cluster2 cluster = plane.getClustersOfString(clusterTypes.get(n)).get(0);
+				for (Vertex2 v1 : cluster.getVertices().values()) {
+					if (v1.getDegree() > 2) {
+						continue;
+					}
+					ArrayList<Cluster2> clusters = new ArrayList<Cluster2>();
+					for (Cluster2 c : plane.getClusters()) {
+						if (c.equals(cluster))
+							continue;
+						clusters.add(c);
+					}
+					ArrayList<Vertex2> candidateVertices = new ArrayList<Vertex2>();
+					for (Vertex2 v : cluster.getVertices().values()) {
+						if (v.equals(v1))
+							continue;
+						if (v.getDegree() > 2)
+							continue;
+						candidateVertices.add(v);
+					}
+					for (int i = 0; i < clusters.size() * 2; i++) {
+						String binary = Integer.toBinaryString(i);
+						ArrayList<Cluster2> clusterSublist = new ArrayList<Cluster2>();
+						for (int j = 0; j < binary.length(); j++) {
+							if (binary.charAt(j) == '1')
+								clusterSublist.add(clusters.get(j));
+						}
+						for (Vertex2 v2 : candidateVertices) {
+							children.add(loopModification(state, plane.getUniqueID(), v1.getUniqueID(), v2.getUniqueID(), clusterSublist, cluster.getVertices()));
+						}
+					}
+				}
+			}
+		}
 		return children;
 	}
 
@@ -186,6 +251,7 @@ public class SproutsGameSolver2 {
 			}
 		}
 		return children;
+
 	}
 
 	public static State2 modifyStateInPlane(State2 old_state, int plane_id, int v1_id, int v2_id) {
