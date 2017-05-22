@@ -31,8 +31,8 @@ public class SproutsGameSolver2 {
 		Random rand = new Random(System.currentTimeMillis());
 
 		ArrayList<State2> childStates = findChildStates(root);
-		// while (childStates.size() > 0) {
-		for (int i = 0; i < 3; i++) {
+		while (childStates.size() > 0) {
+			// for (int i = 0; i < 3; i++) {
 			root.setState(childStates.get(rand.nextInt(childStates.size())));
 
 			System.out.println(root.getState());
@@ -58,15 +58,16 @@ public class SproutsGameSolver2 {
 			for (Cluster2 cluster : plane.getClusters()) {
 				cluster.analyseCluster(plane, currentState);
 
-				StringBuilder bldr = new StringBuilder();
-				for (Vertex2 v : cluster.getVertices().values())
-					bldr.append(v.toString(currentState) + " || ");
-				for (Edge2 e : cluster.getEdges().values()) {
-					bldr.append(e.toString() + " ");
-					bldr.append(e.getPlane_ids() + " |:| ");
-				}
-
-				System.out.println("Plane: " + plane.getUniqueID() + " | " + plane.getVertex_ids() + " " + bldr.toString());
+				// StringBuilder bldr = new StringBuilder();
+				// for (Vertex2 v : cluster.getVertices().values())
+				// bldr.append(v.toString(currentState) + " || ");
+				// for (Edge2 e : cluster.getEdges().values()) {
+				// bldr.append(e.toString() + " ");
+				// bldr.append(e.getPlane_ids() + " |:| ");
+				// }
+				//
+				// System.out.println("Plane: " + plane.getUniqueID() + " | " +
+				// plane.getVertex_ids() + " " + bldr.toString());
 				// System.out.println("CF:" + cluster.getClusterForm() + "\tRS:
 				// " + cluster.searchCluster(plane, currentState));
 			}
@@ -133,12 +134,12 @@ public class SproutsGameSolver2 {
 					}
 					for (int i = 0; i < clusters.size() * 2; i++) {
 						String binary = Integer.toBinaryString(i);
-						ArrayList<Cluster2> clusterSubList = new ArrayList<Cluster2>();
+						ArrayList<Cluster2> clusterSublist = new ArrayList<Cluster2>();
 						for (int j = 0; j < binary.length(); j++) {
 							if (binary.charAt(j) == '1')
-								clusterSubList.add(clusters.get(j));
+								clusterSublist.add(clusters.get(j));
 						}
-						children.add(nooseModification(state, plane.getUniqueID(), v1.getUniqueID(), clusterSubList));
+						children.add(nooseModification(state, plane.getUniqueID(), v1.getUniqueID(), clusterSublist));
 					}
 
 				}
@@ -286,15 +287,21 @@ public class SproutsGameSolver2 {
 			clonedState.getVertices().get(vertex.getUniqueID()).getPlane_ids().add(extraPlane.getUniqueID());
 			clonedState.getVertices().get(vertex.getUniqueID()).getPlane_ids().remove(clonedPlane.getUniqueID());
 			for (Integer edge_id : vertex.getEdge_ids()) {
-				extraPlane.getEdge_ids().add(edge_id);
-				clonedPlane.getEdge_ids().remove(edge_id);
-				clonedState.getEdges().get(edge_id).getPlane_ids().add(extraPlane.getUniqueID());
-				clonedState.getEdges().get(edge_id).getPlane_ids().remove(clonedPlane.getUniqueID());
+				if (clonedPlane.getEdge_ids().contains(edge_id)) {
+					extraPlane.getEdge_ids().add(edge_id);
+					clonedPlane.getEdge_ids().remove(edge_id);
+					clonedState.getEdges().get(edge_id).getPlane_ids().add(extraPlane.getUniqueID());
+					clonedState.getEdges().get(edge_id).getPlane_ids().remove(clonedPlane.getUniqueID());
+				}
 			}
 		}
 		for (Integer edge_id : edge_ids) {
 			extraPlane.getEdge_ids().add(edge_id);
 			clonedState.getEdges().get(edge_id).getPlane_ids().add(extraPlane.getUniqueID());
+			if (clonedState.getEdges().get(edge_id).getPlane_ids().size() > 2) {
+				clonedPlane.getEdge_ids().remove(edge_id);
+				clonedState.getEdges().get(edge_id).getPlane_ids().remove(clonedPlane.getUniqueID());
+			}
 		}
 		for (Vertex2 vertex : cycleVertices) {
 			extraPlane.getVertex_ids().add(vertex.getUniqueID());

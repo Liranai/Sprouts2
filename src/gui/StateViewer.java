@@ -1,11 +1,11 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -26,32 +26,34 @@ public class StateViewer extends JFrame {
 		panels = new ArrayList<JPanel>();
 
 		parent = new JPanel();
-		parent.setLayout(new BoxLayout(parent, BoxLayout.LINE_AXIS));
 		parent.setSize(new Dimension((int) (screen.getWidth() * 0.8), (int) (screen.getHeight() * 0.8)));
 		add(parent);
 
 		setMinimumSize(new Dimension((int) (screen.getWidth() * 0.8), (int) (screen.getHeight() * 0.8)));
 		pack();
 		setLocationRelativeTo(null);
-		setLayout(new FlowLayout());
-
 	}
 
 	public void drawState(State2 state) {
-		// Dimension size = new Dimension((int) ((this.getWidth() - 20) /
-		// Math.ceil(Math.sqrt(state.getNum_of_planes()))),
-		// (int) ((this.getHeight() - 40) /
-		// Math.floor(Math.sqrt(state.getNum_of_planes()))));
-		Dimension size = new Dimension(this.getWidth() / 2, this.getHeight() / 2);
+		GridBagLayout gbl = new GridBagLayout();
+		parent.setLayout(gbl);
+		int panels_per_x = (int) Math.ceil(Math.sqrt(state.getNum_of_planes()));
+		int panels_per_y = (int) Math.ceil(Math.sqrt(state.getNum_of_planes()));
+
+		Dimension size = new Dimension(this.getWidth() / panels_per_x, this.getHeight() / panels_per_y);
 		for (Plane2 plane : state.getPlanes().values()) {
 			panels.add(new PlanePanel(plane, state, size));
 		}
-
-		this.setVisible(true);
-		for (JPanel p : panels) {
-			parent.add(p);
-			p.repaint();
+		for (int i = 0; i < panels.size(); i++) {
+			GridBagConstraints constraints = new GridBagConstraints();
+			constraints.fill = GridBagConstraints.VERTICAL;
+			constraints.gridwidth = 1;
+			constraints.gridheight = 1;
+			constraints.gridx = (i % panels_per_x);
+			constraints.gridy = (int) Math.ceil(i / panels_per_y);
+			parent.add(panels.get(i), constraints);
 		}
+		this.setVisible(true);
 		this.pack();
 	}
 }

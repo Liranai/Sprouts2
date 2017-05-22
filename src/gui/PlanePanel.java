@@ -21,7 +21,7 @@ import model.State2;
 public class PlanePanel extends JPanel {
 
 	private static final long serialVersionUID = 7615850243423603120L;
-	private static final int OFFSET = 10;
+	private static final int OFFSET = 20;
 	private static final int CIRCLESIZE = 8;
 	private Plane2 plane;
 	private State2 state;
@@ -40,7 +40,7 @@ public class PlanePanel extends JPanel {
 		int i = 0;
 		int vertices_per_x = (int) Math.ceil(Math.sqrt(plane.getVertex_ids().size()));
 		int distance_x = (this.getWidth() - 2 * OFFSET) / vertices_per_x;
-		int vertices_per_y = (int) Math.floor(Math.sqrt(plane.getVertex_ids().size()));
+		int vertices_per_y = (int) Math.ceil(Math.sqrt(plane.getVertex_ids().size()));
 		int distance_y = (this.getHeight() - 2 * OFFSET) / vertices_per_y;
 		for (Integer vertex_id : plane.getVertex_ids()) {
 			int x = (i % vertices_per_x) * distance_x + OFFSET;
@@ -49,10 +49,14 @@ public class PlanePanel extends JPanel {
 			i++;
 		}
 
-		g2.setColor(Color.PINK);
+		g2.setColor(new Color(255, 51, 153));
 		g2.draw(new Rectangle2D.Double(0, 0, this.getWidth(), this.getHeight()));
 		g2.setColor(Color.GRAY);
 		g2.fill(new Rectangle2D.Double(1, 1, this.getWidth() - 1, this.getHeight() - 1));
+
+		g2.setColor(new Color(153, 0, 153));
+		g2.setFont(new Font("Calibri", Font.BOLD, 15));
+		g2.drawString("Plane: " + plane.getUniqueID(), 5, 15);
 
 		for (Integer key : ui_vertices.keySet()) {
 			g2.setColor(Color.BLACK);
@@ -66,10 +70,8 @@ public class PlanePanel extends JPanel {
 		g2.setColor(Color.BLACK);
 		for (Integer edge_id : plane.getEdge_ids()) {
 			Edge2 edge = state.getEdges().get(edge_id);
-			if (edge.getPlane_ids().contains(plane.getUniqueID())) {
-				g2.draw(new Line2D.Double(ui_vertices.get(edge.getNodes().getFirst()).x, ui_vertices.get(edge.getNodes().getFirst()).y, ui_vertices.get(edge.getNodes().getSecond()).x,
-						ui_vertices.get(edge.getNodes().getSecond()).y));
-			}
+			g2.draw(new Line2D.Double(ui_vertices.get(edge.getNodes().getFirst()).x, ui_vertices.get(edge.getNodes().getFirst()).y, ui_vertices.get(edge.getNodes().getSecond()).x,
+					ui_vertices.get(edge.getNodes().getSecond()).y));
 		}
 	}
 }

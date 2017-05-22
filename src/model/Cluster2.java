@@ -236,7 +236,7 @@ public class Cluster2 {
 						tempVertex = state.getVertices().get(state.getEdges().get(edge_id).getNodes().getFirst());
 					}
 					if (evalPath.size() > 1) {
-						if (!queuePath.get(queuePath.size() - 2).equals(tempVertex)) {
+						if (!queuePath.get(queuePath.size() - 2)[0].equals(tempVertex)) {
 							queuePath.add(new Object[] { tempVertex, edge_id });
 							queue.add(queuePath);
 						}
