@@ -22,15 +22,22 @@ public class SproutsGameSolver2 {
 	private Node2 root;
 	@Setter
 	private SproutsUI2 ui;
+	private StateViewer viewer;
 
 	public SproutsGameSolver2(State2 state) {
 		root = new Node2(state, null);
+		viewer = new StateViewer();
 	}
 
 	public void run() throws InterruptedException {
 		Random rand = new Random(System.currentTimeMillis());
 
+		// int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE,
+		// true);
+		//
+		// System.out.println("WINNER IS: " + value);
 		ArrayList<State2> childStates = findChildStates(root);
+
 		while (childStates.size() > 0) {
 			// for (int i = 0; i < 3; i++) {
 			root.setState(childStates.get(rand.nextInt(childStates.size())));
@@ -42,11 +49,52 @@ public class SproutsGameSolver2 {
 
 		}
 		System.out.println("FINAL STATE:\n" + root.getState());
-		ui.repaint();
+		// Node2 child = root.getChildren().get(0);
+		// while (!child.isTerminal() && !child.getChildren().isEmpty()) {
+		// viewer.drawState(child.getState());
+		// child = child.getChildren().get(0);
+		// }
 
-		StateViewer viewer = new StateViewer();
 		viewer.drawState(root.getState());
+	}
 
+	public Integer alphaBeta(Node2 node, int depth, int alpha, int beta, boolean min_max) {
+		System.out.println(depth);
+		// viewer.drawState(node.getState());
+		if (node.isTerminal()) {
+			if (min_max) {
+				return -1;
+			}
+			return 1;
+		} else {
+			generateChildren(node);
+			if (min_max) {
+				int value = Integer.MIN_VALUE;
+				for (Node2 child : node.getChildren()) {
+					value = Math.max(value, alphaBeta(child, depth + 1, alpha, beta, !min_max));
+					alpha = Math.max(alpha, value);
+					if (beta <= alpha)
+						break;
+				}
+				return value;
+			} else {
+				int value = Integer.MAX_VALUE;
+				for (Node2 child : node.getChildren()) {
+					value = Math.min(value, alphaBeta(child, depth + 1, alpha, beta, !min_max));
+					beta = Math.min(beta, value);
+					if (beta <= alpha)
+						break;
+				}
+				return value;
+			}
+		}
+	}
+
+	public void generateChildren(Node2 node) {
+		ArrayList<State2> children = findChildStates(node);
+		for (State2 child : children) {
+			node.addChild(new Node2(child, node));
+		}
 	}
 
 	public static ArrayList<State2> findChildStates(Node2 node) {
