@@ -22,21 +22,27 @@ public class SproutsGameSolver2 {
 	private Node2 root;
 	@Setter
 	private SproutsUI2 ui;
+	@Setter
+	private boolean minimax;
 	private StateViewer viewer;
 
-	public SproutsGameSolver2(State2 state) {
+	public SproutsGameSolver2(State2 state, boolean minimax) {
 		root = new Node2(state, null);
 		viewer = new StateViewer();
+		this.minimax = minimax;
 	}
 
 	public void run() throws InterruptedException {
 		Random rand = new Random(System.currentTimeMillis());
 
-		// int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE,
-		// true);
-		//
-		// System.out.println("WINNER IS: " + value);
+		if (minimax) {
+			int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+
+			System.out.println("WINNER IS: " + value);
+		}
 		ArrayList<State2> childStates = findChildStates(root);
+
+		State2 state = childStates.get(rand.nextInt(childStates.size()));
 
 		while (childStates.size() > 0) {
 			// for (int i = 0; i < 3; i++) {
