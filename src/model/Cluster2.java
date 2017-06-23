@@ -13,15 +13,6 @@ import lombok.Setter;
 @Getter
 public class Cluster2 {
 
-	/**
-	 * Clusters groups of Vertices that are connected;
-	 * 
-	 * Cluster Types: 0 == Single vertex with degree 0
-	 * 
-	 * 
-	 * TODO: when clusters are joined the counter CLUSTERS isn't updated
-	 */
-
 	private static int clusters = 0;
 
 	private HashMap<Integer, Vertex2> vertices;
@@ -47,6 +38,13 @@ public class Cluster2 {
 		this.vertices = vertices;
 		this.edges = edges;
 		this.structure = structure;
+	}
+
+	private ArrayList<Vertex2> getOrderedVertices() {
+		ArrayList<Vertex2> orderdVertices = new ArrayList<Vertex2>();
+		Vertex2 vertex = vertices.values().iterator().next();
+		orderdVertices.add(vertex);
+
 	}
 
 	public String recursiveDFS(String current, HashSet<Integer> keysSeen, Vertex2 currentVertex, Vertex2 lastVertex, Plane2 plane, State2 state) {

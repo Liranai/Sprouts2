@@ -31,6 +31,64 @@ public class State2 {
 		}
 	}
 
+	public String getStringRepresentation() {
+		StringBuilder bldr = new StringBuilder();
+		for (Plane2 plane : planes.values()) {
+			plane.setClusters(Cluster2.clusterPlane(plane, this));
+			for (Cluster2 cluster : plane.getClusters()) {
+				for (Vertex2 vertex : cluster.getVertices().values()) {
+					bldr.append(vertex.getUniqueID() + ",");
+				}
+				bldr.append(".");
+			}
+			bldr.append("}");
+		}
+		bldr.append("!");
+		return bldr.toString();
+	}
+
+	public String getNewStringRepresentation() {
+		StringBuilder bldr = new StringBuilder();
+		for (Plane2 plane : planes.values()) {
+			int open_nodes = 0;
+			checkloop: for (Integer vertex_id : plane.getVertex_ids()) {
+				if (vertices.get(vertex_id).getDegree() < 2) {
+					open_nodes += 2;
+					break checkloop;
+				}
+				if (vertices.get(vertex_id).getDegree() < 3) {
+					open_nodes++;
+					if (open_nodes > 1) {
+						break checkloop;
+					}
+				}
+			}
+			if (open_nodes < 2) {
+				continue;
+			}
+
+			plane.setClusters(Cluster2.clusterPlane(plane, this));
+			for (Cluster2 cluster : plane.getClusters()) {
+				boolean print = false;
+				for (Vertex2 vertex : cluster.getVertices().values()) {
+					if (vertex.getDegree() == 3)
+						continue;
+					if (vertex.getDegree() == 2) {
+						bldr.append(vertex.getUniqueID() + ",");
+					} else {
+						bldr.append(vertex.getDegree() + ",");
+					}
+					print = true;
+				}
+				if (print)
+					bldr.append(".");
+			}
+			bldr.append("}");
+		}
+		bldr.append("!");
+		return bldr.toString();
+	}
+
 	public State2(int num_of_vertices, int num_of_edges, int num_of_planes, HashMap<Integer, Vertex2> vertices, HashMap<Integer, Edge2> edges, HashMap<Integer, Plane2> planes) {
 		this.num_of_vertices = num_of_vertices;
 		this.num_of_edges = num_of_edges;
