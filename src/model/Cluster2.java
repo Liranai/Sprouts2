@@ -40,13 +40,6 @@ public class Cluster2 {
 		this.structure = structure;
 	}
 
-	private ArrayList<Vertex2> getOrderedVertices() {
-		ArrayList<Vertex2> orderdVertices = new ArrayList<Vertex2>();
-		Vertex2 vertex = vertices.values().iterator().next();
-		orderdVertices.add(vertex);
-
-	}
-
 	public String recursiveDFS(String current, HashSet<Integer> keysSeen, Vertex2 currentVertex, Vertex2 lastVertex, Plane2 plane, State2 state) {
 		currentVertex = state.getVertices().get(currentVertex.getUniqueID());
 		String str = current;
@@ -166,6 +159,20 @@ public class Cluster2 {
 		}
 	}
 
+	
+	/**
+	 * Returns a boolean whether or not the two given clusters are isomorph
+	 * WARNING: make sure the clusters are cloned.
+	 * @param c1 
+	 * @param c2
+	 * @return
+	 */
+	public static boolean checkIsomorphism(Cluster2 c1, Cluster2 c2) {
+		if(!(c1.getVertices().size() == c2.getVertices().size())) {
+			return false;
+		} else if()
+	}
+	
 	/**
 	 * Finds the shortest cycle starting and ending from Vertex Start
 	 * 
