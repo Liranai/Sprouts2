@@ -69,8 +69,8 @@ public class SproutsGameSolver2 {
 			State2 currentState = childStates.poll();
 			System.out.println(currentState.getStringRepresentation());
 			writer.write(currentState.getStringRepresentation() + "\n");
-			System.out.println(currentState.getNewStringRepresentation());
-			writer.write(currentState.getNewStringRepresentation() + "\n");
+			// System.out.println(currentState.getNewStringRepresentation());
+			// writer.write(currentState.getNewStringRepresentation() + "\n");
 			System.out.println(currentState.toString());
 			writer.write(currentState.toString() + "\n");
 			writer.newLine();
@@ -82,9 +82,9 @@ public class SproutsGameSolver2 {
 		System.out.println("Evaluated: " + counter);
 
 		if (minimax) {
-			int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+			int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 
-			System.out.println("WINNER IS: " + value);
+			System.out.println("WINNER IS: " + (value > 0 ? "Win" : "Lose"));
 		}
 	}
 
@@ -186,6 +186,14 @@ public class SproutsGameSolver2 {
 		}
 		return children;
 	}
+	
+	public static ArrayList<State2> eliminateDuplicateChildren(ArrayList<State2> children){
+		ArrayList<State2> uniqueChildren = new ArrayList<State2>();
+		
+		
+		
+		return uniqueChildren;
+	}
 
 	public static ArrayList<State2> findAdvancedLegalNooseIntraClusterChildren(State2 state) {
 		ArrayList<State2> children = new ArrayList<State2>();
@@ -245,6 +253,8 @@ public class SproutsGameSolver2 {
 						if (v.equals(v1))
 							continue;
 						if (v.getDegree() > 2)
+							continue;
+						if (v.getUniqueID() <= v1.getUniqueID())
 							continue;
 						candidateVertices.add(v);
 					}
