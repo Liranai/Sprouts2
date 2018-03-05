@@ -159,20 +159,108 @@ public class Cluster2 {
 		}
 	}
 
-	
 	/**
 	 * Returns a boolean whether or not the two given clusters are isomorph
 	 * WARNING: make sure the clusters are cloned.
-	 * @param c1 
+	 * 
+	 * @param c1
 	 * @param c2
 	 * @return
 	 */
 	public static boolean checkIsomorphism(Cluster2 c1, Cluster2 c2) {
-		if(!(c1.getVertices().size() == c2.getVertices().size())) {
+		// Check number of Vertices and Edges
+		if (!(c1.getVertices().size() == c2.getVertices().size() && c1.getEdges().size() == c2.getEdges().size())) {
 			return false;
-		} else if()
+		}
+
+		// Check degree sequence
+		int[] degrees = new int[] { 0, 0, 0, 0 };
+		for (Vertex2 v1 : c1.getVertices().values()) {
+			degrees[v1.getDegree()]++;
+		}
+		for (Vertex2 v2 : c2.getVertices().values()) {
+			degrees[v2.getDegree()]--;
+		}
+		for (int i : degrees) {
+			if (i > 0)
+				return false;
+		}
+
+		if (c1.getEdges().size() == 0) {
+			return true;
+		}
+
+		// Check edge sequence
+		HashMap<Pair<Integer, Integer>, Integer> edgeDegrees = new HashMap<Pair<Integer, Integer>, Integer>();
+		ArrayList<Pair<Edge2, Pair<Integer, Integer>>> links1 = new ArrayList<Pair<Edge2, Pair<Integer, Integer>>>();
+		for (Edge2 e1 : c1.getEdges().values()) {
+			Vertex2 v1 = c1.getVertices().get(e1.getNodes().getFirst());
+			Vertex2 v2 = c1.getVertices().get(e1.getNodes().getSecond());
+
+			Pair<Integer, Integer> endDegrees = new Pair<Integer, Integer>(Math.min(v1.getDegree(), v2.getDegree()), Math.max(v1.getDegree(), v2.getDegree()));
+			if (edgeDegrees.containsKey(endDegrees)) {
+				edgeDegrees.put(endDegrees, edgeDegrees.get(endDegrees) + 1);
+			} else {
+				edgeDegrees.put(endDegrees, 1);
+			}
+			links1.add(new Pair<Edge2, Pair<Integer, Integer>>(e1, endDegrees));
+		}
+		// Save least common edge
+		Pair<Integer, Integer> selected = null;
+		int value = Integer.MAX_VALUE;
+
+		for (Pair<Integer, Integer> key : edgeDegrees.keySet()) {
+			if (edgeDegrees.get(key) < value) {
+				value = edgeDegrees.get(key);
+				selected = key;
+			}
+		}
+
+		ArrayList<Pair<Edge2, Pair<Integer, Integer>>> links2 = new ArrayList<Pair<Edge2, Pair<Integer, Integer>>>();
+		for (Edge2 e2 : c2.getEdges().values()) {
+			Vertex2 v1 = c2.getVertices().get(e2.getNodes().getFirst());
+			Vertex2 v2 = c2.getVertices().get(e2.getNodes().getSecond());
+
+			Pair<Integer, Integer> endDegrees = new Pair<Integer, Integer>(Math.min(v1.getDegree(), v2.getDegree()), Math.max(v1.getDegree(), v2.getDegree()));
+			if (edgeDegrees.containsKey(endDegrees)) {
+				int d = edgeDegrees.get(endDegrees);
+				if (d <= 0) {
+					return false;
+				}
+				edgeDegrees.put(endDegrees, d - 1);
+			} else {
+				return false;
+			}
+			links2.add(new Pair<Edge2, Pair<Integer, Integer>>(e2, endDegrees));
+		}
+		for (Integer i : edgeDegrees.values()) {
+			if (i > 0)
+				return false;
+		}
+
+		// Remove base structures/0-degree vertices
+
+		// Remove an edge on both clusters
+		Edge2 e1 = null;
+		for (Pair<Edge2, Pair<Integer, Integer>> item : links1) {
+			if (item.getSecond().equals(selected)) {
+				e1 = item.getFirst();
+				break;
+			}
+		}
+		Edge2 e2 = null;
+		for (Pair<Edge2, Pair<Integer, Integer>> item : links2) {
+			if (item.getSecond().equals(selected)) {
+				e2 = item.getFirst();
+				break;
+			}
+		}
+		c1.getEdges().remove(e1.getUniqueID());
+		c2.getEdges().remove(e2.getUniqueID());
+
+		return checkIsomorphism(c1, c2);
 	}
-	
+
 	/**
 	 * Finds the shortest cycle starting and ending from Vertex Start
 	 * 

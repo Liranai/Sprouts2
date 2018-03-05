@@ -1,15 +1,13 @@
 package logic;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import gui.SproutsUI2;
 import gui.StateViewer;
@@ -39,48 +37,48 @@ public class SproutsGameSolver2 {
 	}
 
 	public void run() throws InterruptedException, IOException {
-		Random rand = new Random(System.currentTimeMillis());
+		// Random rand = new Random(System.currentTimeMillis());
 
-		// ExecutorService executor = Executors.newFixedThreadPool(5);
-		// MultiThreadAlphaBetaSearch search = new
-		// MultiThreadAlphaBetaSearch(root);
-		// Future<Integer> future = executor.submit(search);
-		//
-		// while (!future.isDone()) {
-		// Thread.sleep(5000);
-		// System.out.println("NODES EVALUATED: " + search.getNodes_explored());
-		// }
-		// try {
-		// System.out.println("NODES EVALUATED: " + search.getNodes_explored());
-		// System.out.println("Winner: " + future.get());
-		// } catch (ExecutionException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		ExecutorService executor = Executors.newFixedThreadPool(10);
+		MultiThreadAlphaBetaSearch search = new MultiThreadAlphaBetaSearch(root);
+		Future<Integer> future = executor.submit(search);
 
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Sprouts" + System.currentTimeMillis() + ".txt")));
-
-		Queue<State2> childStates = new LinkedList<State2>();
-		childStates.addAll(findChildStates(root));
-		long counter = 1;
-
-		while (!childStates.isEmpty()) {
-			counter++;
-			State2 currentState = childStates.poll();
-			System.out.println(currentState.getStringRepresentation());
-			writer.write(currentState.getStringRepresentation() + "\n");
-			// System.out.println(currentState.getNewStringRepresentation());
-			// writer.write(currentState.getNewStringRepresentation() + "\n");
-			System.out.println(currentState.toString());
-			writer.write(currentState.toString() + "\n");
-			writer.newLine();
-			childStates.addAll(findChildStates(new Node2(currentState, null)));
+		while (!future.isDone()) {
+			Thread.sleep(5000);
+			System.out.println("NODES EVALUATED: " + search.getNodes_explored());
+		}
+		try {
+			System.out.println("NODES EVALUATED: " + search.getNodes_explored());
+			System.out.println("Winner: " + future.get());
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		writer.close();
-
-		System.out.println("Evaluated: " + counter);
-
+		// BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new
+		// FileOutputStream("Sprouts" + System.currentTimeMillis() + ".txt")));
+		//
+		// Queue<State2> childStates = new LinkedList<State2>();
+		// childStates.addAll(findChildStates(root));
+		// long counter = 1;
+		//
+		// while (!childStates.isEmpty()) {
+		// counter++;
+		// State2 currentState = childStates.poll();
+		// System.out.println(currentState.getStringRepresentation());
+		// writer.write(currentState.getStringRepresentation() + "\n");
+		// // System.out.println(currentState.getNewStringRepresentation());
+		// // writer.write(currentState.getNewStringRepresentation() + "\n");
+		// System.out.println(currentState.toString());
+		// writer.write(currentState.toString() + "\n");
+		// writer.newLine();
+		// childStates.addAll(findChildStates(new Node2(currentState, null)));
+		// }
+		//
+		// writer.close();
+		//
+		// System.out.println("Evaluated: " + counter);
+		//
 		if (minimax) {
 			int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 
@@ -186,12 +184,10 @@ public class SproutsGameSolver2 {
 		}
 		return children;
 	}
-	
-	public static ArrayList<State2> eliminateDuplicateChildren(ArrayList<State2> children){
+
+	public static ArrayList<State2> eliminateDuplicateChildren(ArrayList<State2> children) {
 		ArrayList<State2> uniqueChildren = new ArrayList<State2>();
-		
-		
-		
+
 		return uniqueChildren;
 	}
 
