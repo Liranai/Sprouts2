@@ -49,7 +49,7 @@ public class SproutsGameSolver2 {
 		}
 		try {
 			System.out.println("NODES EVALUATED: " + search.getNodes_explored());
-			System.out.println("Winner: " + future.get());
+			System.out.println("Winner: " + (future.get() > 0 ? "P1 wins" : "P2 wins"));
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,11 +79,12 @@ public class SproutsGameSolver2 {
 		//
 		// System.out.println("Evaluated: " + counter);
 		//
-		if (minimax) {
-			int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-
-			System.out.println("WINNER IS: " + (value > 0 ? "Win" : "Lose"));
-		}
+		// if (minimax) {
+		// int value = alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE,
+		// true);
+		//
+		// System.out.println("WINNER IS: " + (value > 0 ? "Win" : "Lose"));
+		// }
 	}
 
 	public Integer alphaBeta(Node2 node, int depth, int alpha, int beta, boolean min_max) {

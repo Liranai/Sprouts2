@@ -132,6 +132,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 									continue;
 								if (v.getDegree() > 2)
 									continue;
+								if (v.getUniqueID() <= v1.getUniqueID())
+									continue;
 								candidateVertices.add(v);
 							}
 							if (clusters.isEmpty()) {
@@ -260,6 +262,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 								if (v.equals(v1))
 									continue;
 								if (v.getDegree() > 2)
+									continue;
+								if (v.getUniqueID() <= v1.getUniqueID())
 									continue;
 								candidateVertices.add(v);
 							}
