@@ -34,21 +34,49 @@ public class SproutsGameSolver2 {
 		root = new Node2(state, null);
 		viewer = new StateViewer();
 		this.minimax = minimax;
+
+		// ArrayList<Node2> grandKids = new ArrayList<Node2>();
+		// this.generateChildren(root);
+		// for (Node2 child : root.getChildren()) {
+		// this.generateChildren(child);
+		// for (Node2 kid : child.getChildren()) {
+		//
+		// for (Plane2 plane : kid.getState().getPlanes().values()) {
+		// plane.setClusters(Cluster2.clusterPlane(plane, kid.getState()));
+		// }
+		//
+		// boolean equal = false;
+		// for (Node2 check : grandKids) {
+		// if (kid.getState().isEqualTo(check.getState())) {
+		// System.out.println("Equals: " + kid.getState().toString() + " AND " +
+		// check.getState().toString());
+		// equal = true;
+		// break;
+		// }
+		// }
+		// if (!equal)
+		// grandKids.add(kid);
+		// System.out.println(kid.getState().toString() + "\n");
+		// }
+		// }
+		// System.out.println(grandKids.size());
+
 	}
 
 	public void run() throws InterruptedException, IOException {
 		// Random rand = new Random(System.currentTimeMillis());
 
-		ExecutorService executor = Executors.newFixedThreadPool(10);
+		ExecutorService executor = Executors.newFixedThreadPool(1);
 		MultiThreadAlphaBetaSearch search = new MultiThreadAlphaBetaSearch(root);
 		Future<Integer> future = executor.submit(search);
 
 		while (!future.isDone()) {
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 			System.out.println("NODES EVALUATED: " + search.getNodes_explored());
 		}
 		try {
 			System.out.println("NODES EVALUATED: " + search.getNodes_explored());
+			// System.out.println(future.get());
 			System.out.println("Winner: " + (future.get() > 0 ? "P1 wins" : "P2 wins"));
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block

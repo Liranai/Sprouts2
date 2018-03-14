@@ -31,6 +31,31 @@ public class State2 {
 		}
 	}
 
+	public boolean isEqualTo(State2 state) {
+
+		for (Plane2 plane : state.getPlanes().values()) {
+			for (Cluster2 cluster : plane.getClusters()) {
+				boolean hasEqual = false;
+				equivalence: for (Plane2 p2 : planes.values()) {
+					if (!(plane.getVertex_ids().size() == p2.getVertex_ids().size()))
+						continue;
+
+					for (Cluster2 c2 : p2.getClusters()) {
+						if (Cluster2.checkIsomorphism(cluster.clone(), c2.clone())) {
+							// return true;
+							hasEqual = true;
+							break equivalence;
+						}
+					}
+				}
+				if (!hasEqual) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public String getStringRepresentation() {
 		StringBuilder bldr = new StringBuilder();
 		for (Plane2 plane : planes.values()) {

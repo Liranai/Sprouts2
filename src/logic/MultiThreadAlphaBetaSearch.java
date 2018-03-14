@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import lombok.Getter;
@@ -14,15 +15,17 @@ import model.Vertex2;
 public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 
 	private Node2 root;
-	private int value;
 	private long nodes_explored;
+	private ArrayList<Node2> nodes;
+	private HashMap<Integer, ArrayList<Node2>> previousNodes;
 
 	public MultiThreadAlphaBetaSearch(Node2 root) {
 		this.root = root;
 		nodes_explored = 1;
+		previousNodes = new HashMap<Integer, ArrayList<Node2>>();
+		nodes = new ArrayList<Node2>();
 	}
 
-	@Override
 	public Integer call() throws Exception {
 		return alphaBeta(root, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 	}
@@ -30,11 +33,26 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 	public Integer alphaBeta(Node2 node, int depth, int alpha, int beta, boolean min_max) {
 		nodes_explored++;
 		// TODO: Optional, output
+
 		if (node.isTerminal()) {
 			if (min_max)
 				return -1;
 			return 1;
 		} else {
+			if (previousNodes.containsKey(depth)) {
+				for (Plane2 plane : node.getState().getPlanes().values()) {
+					plane.setClusters(Cluster2.clusterPlane(plane, node.getState()));
+				}
+				for (Node2 previous : previousNodes.get(depth)) {
+					if (previous.getState().isEqualTo(node.getState()))
+						return (min_max ? Integer.MAX_VALUE : Integer.MIN_VALUE);
+				}
+			} else {
+				previousNodes.put(depth, new ArrayList<Node2>());
+			}
+
+			previousNodes.get(depth).add(node);
+
 			if (min_max) {
 				int value = Integer.MIN_VALUE;
 				Node2 child = null;

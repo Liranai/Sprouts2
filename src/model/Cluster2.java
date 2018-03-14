@@ -182,8 +182,10 @@ public class Cluster2 {
 			degrees[v2.getDegree()]--;
 		}
 		for (int i : degrees) {
-			if (i > 0)
+			if (i > 0) {
+				// System.out.println("uneven DEGREE sequence");
 				return false;
+			}
 		}
 
 		if (c1.getEdges().size() == 0) {
@@ -225,40 +227,58 @@ public class Cluster2 {
 			if (edgeDegrees.containsKey(endDegrees)) {
 				int d = edgeDegrees.get(endDegrees);
 				if (d <= 0) {
+					// System.out.println("uneven unsure");
 					return false;
 				}
 				edgeDegrees.put(endDegrees, d - 1);
 			} else {
+				// System.out.println("Clusters have different edges");
 				return false;
 			}
 			links2.add(new Pair<Edge2, Pair<Integer, Integer>>(e2, endDegrees));
 		}
 		for (Integer i : edgeDegrees.values()) {
-			if (i > 0)
+			if (i > 0) {
+				// System.out.println("uneven EDGE sequence");
 				return false;
+			}
 		}
 
 		// Remove base structures/0-degree vertices
 
 		// Remove an edge on both clusters
+		ArrayList<Edge2> e1s = new ArrayList<Edge2>();
+		ArrayList<Edge2> e2s = new ArrayList<Edge2>();
+
 		Edge2 e1 = null;
 		for (Pair<Edge2, Pair<Integer, Integer>> item : links1) {
 			if (item.getSecond().equals(selected)) {
 				e1 = item.getFirst();
-				break;
+				e1s.add(e1);
 			}
 		}
 		Edge2 e2 = null;
 		for (Pair<Edge2, Pair<Integer, Integer>> item : links2) {
 			if (item.getSecond().equals(selected)) {
 				e2 = item.getFirst();
-				break;
+				e2s.add(e2);
 			}
 		}
-		c1.getEdges().remove(e1.getUniqueID());
-		c2.getEdges().remove(e2.getUniqueID());
 
-		return checkIsomorphism(c1, c2);
+		for (Edge2 e1n : e1s) {
+			for (Edge2 e2n : e2s) {
+				Cluster2 c1n = c1.clone();
+				Cluster2 c2n = c2.clone();
+				c1n.getEdges().remove(e1n.getUniqueID());
+				c2n.getEdges().remove(e2n.getUniqueID());
+				if (checkIsomorphism(c1n, c2n))
+					return true;
+			}
+		}
+
+		// System.out.println("We got there");
+		return false;
+		// return checkIsomorphism(c1, c2);
 	}
 
 	/**

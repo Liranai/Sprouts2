@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,5 +34,10 @@ public class Pair<T1, T2> implements Serializable {
 		if (first.equals(((Pair<T1, T2>) obj).getFirst()) && second.equals(((Pair<T1, T2>) obj).getSecond()))
 			return true;
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(first, second);
 	}
 }
