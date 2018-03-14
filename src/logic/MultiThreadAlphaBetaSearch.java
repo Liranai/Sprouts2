@@ -75,6 +75,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 										alpha = Math.max(alpha, value);
 										if (beta <= alpha)
 											break searchloop;
+										else
+											node.addChild(child);
 									}
 								}
 							}
@@ -98,6 +100,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 								alpha = Math.max(alpha, value);
 								if (beta <= alpha)
 									break searchloop;
+								else
+									node.addChild(child);
 							}
 							for (int n = 0; n < clusters.size() * 2; n++) {
 								String binary = Integer.toBinaryString(n);
@@ -112,6 +116,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 								alpha = Math.max(alpha, value);
 								if (beta <= alpha)
 									break searchloop;
+								else
+									node.addChild(child);
 							}
 						}
 
@@ -144,6 +150,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 									alpha = Math.max(alpha, value);
 									if (beta <= alpha)
 										break searchloop;
+									else
+										node.addChild(child);
 								}
 							}
 							for (int n = 0; n < clusters.size() * 2; n++) {
@@ -160,6 +168,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 									alpha = Math.max(alpha, value);
 									if (beta <= alpha)
 										break searchloop;
+									else
+										node.addChild(child);
 								}
 							}
 						}
@@ -206,6 +216,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 										beta = Math.min(beta, value);
 										if (beta <= alpha)
 											break searchloop;
+										else
+											node.addChild(child);
 									}
 								}
 							}
@@ -229,6 +241,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 								beta = Math.min(beta, value);
 								if (beta <= alpha)
 									break searchloop;
+								else
+									node.addChild(child);
 							}
 							for (int n = 0; n < clusters.size() * 2; n++) {
 								String binary = Integer.toBinaryString(n);
@@ -243,6 +257,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 								beta = Math.min(beta, value);
 								if (beta <= alpha)
 									break searchloop;
+								else
+									node.addChild(child);
 							}
 						}
 
@@ -275,6 +291,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 									beta = Math.min(beta, value);
 									if (beta <= alpha)
 										break searchloop;
+									else
+										node.addChild(child);
 								}
 							}
 							for (int n = 0; n < clusters.size() * 2; n++) {
@@ -291,6 +309,8 @@ public class MultiThreadAlphaBetaSearch implements Callable<Integer> {
 									beta = Math.min(beta, value);
 									if (beta <= alpha)
 										break searchloop;
+									else
+										node.addChild(child);
 								}
 							}
 						}
